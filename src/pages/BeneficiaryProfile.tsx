@@ -117,7 +117,7 @@ export default function BeneficiaryProfile() {
         className="bg-white rounded-3xl shadow-xl overflow-hidden mb-6"
       >
         {/* Banner */}
-        <div className="h-36 bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-500 relative overflow-hidden">
+        <div className="h-44 bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-500 relative overflow-hidden">
           <div
             className="absolute inset-0 opacity-20"
             style={{
@@ -145,11 +145,11 @@ export default function BeneficiaryProfile() {
                 <img
                   src={beneficiary.profile_image}
                   alt={beneficiary.business_name}
-                  className="w-20 h-20 rounded-2xl object-cover border-4 border-white shadow-xl"
+                  className="w-24 h-24 rounded-2xl object-cover object-center border-4 border-white shadow-xl"
                 />
               ) : (
-                <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-100 to-blue-200 border-4 border-white shadow-xl flex items-center justify-center">
-                  <User className="w-10 h-10 text-blue-400" />
+                <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-blue-100 to-blue-200 border-4 border-white shadow-xl flex items-center justify-center">
+                  <User className="w-12 h-12 text-blue-400" />
                 </div>
               )}
               {beneficiary.featured && (
@@ -291,17 +291,17 @@ export default function BeneficiaryProfile() {
             <h2 className="text-lg font-bold text-gray-800 mb-4">Work Gallery</h2>
             {gallery.length > 0 ? (
               <div>
-                <div className="relative rounded-xl overflow-hidden aspect-video bg-gray-100 mb-3">
+                <div className="relative rounded-xl overflow-hidden bg-gray-100 mb-3 flex items-center justify-center" style={{ minHeight: '200px', maxHeight: '420px' }}>
                   <AnimatePresence mode="wait">
                     <motion.img
                       key={activeImage}
                       src={gallery[activeImage]}
                       alt="Gallery"
-                      initial={{ opacity: 0, scale: 1.05 }}
+                      initial={{ opacity: 0, scale: 1.02 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.3 }}
-                      className="w-full h-full object-cover"
+                      className="w-full h-auto max-h-96 object-contain"
                     />
                   </AnimatePresence>
                   {gallery.length > 1 && (
