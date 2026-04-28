@@ -18,6 +18,7 @@ const TN_DISTRICTS = [
 
 interface BeneficiaryRow {
   id: string;
+  name?: string | null;           // ✅ ADDED: personal name
   business_name?: string | null;
   district?: string | null;
   location?: string | null;
@@ -38,6 +39,7 @@ interface BeneficiaryRow {
 }
 
 const EMPTY_FORM: Omit<BeneficiaryRow, 'id' | 'categories'> = {
+  name: '',                        // ✅ ADDED
   business_name: '',
   district: '',
   location: '',
@@ -149,6 +151,7 @@ export default function AdminBeneficiaries() {
     setSuccess(null);
 
     const payload = {
+      name: form.name?.trim() || null,            // ✅ ADDED
       business_name: form.business_name?.trim() || null,
       district: form.district?.trim() || null,
       location: form.location?.trim() || null,
@@ -193,6 +196,7 @@ export default function AdminBeneficiaries() {
 
   function handleEdit(ben: BeneficiaryRow) {
     setForm({
+      name: ben.name || '',                        // ✅ ADDED
       business_name: ben.business_name || '',
       district: ben.district || '',
       location: ben.location || '',
@@ -272,6 +276,13 @@ export default function AdminBeneficiaries() {
             </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+              {/* ✅ NEW: Beneficiary Full Name */}
+              <div className="sm:col-span-2">
+                <label className={label}>Beneficiary Full Name</label>
+                <input className={inp} placeholder="e.g. Prema Selvamumar"
+                  value={form.name || ''} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
+              </div>
 
               {/* Shop / Business Name */}
               <div className="sm:col-span-2">
@@ -502,12 +513,16 @@ export default function AdminBeneficiaries() {
                 </div>
               )}
 
-              {/* Info */}
+              {/* Info — now shows personal name too */}
               <div className="flex-1 min-w-0">
                 <p className="font-semibold text-gray-800 truncate">
                   {ben.business_name || 'Unnamed'}
                   {ben.featured && <span className="ml-2 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">★ Featured</span>}
                 </p>
+                {/* ✅ Show personal name below shop name */}
+                {ben.name && (
+                  <p className="text-xs text-gray-600 font-medium mt-0.5">{ben.name}</p>
+                )}
                 <p className="text-xs text-gray-400 mt-0.5">
                   {ben.categories?.name && <span className="mr-2">{ben.categories.name}</span>}
                   {ben.district && <span className="mr-2">· {ben.district}</span>}

@@ -116,7 +116,7 @@ export default function BeneficiaryProfile() {
         animate={{ opacity: 1, y: 0 }}
         className="bg-white rounded-3xl shadow-xl overflow-hidden mb-6"
       >
-        {/* Banner — profile image + shop name side by side inside */}
+        {/* Banner */}
         <div className="h-36 bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-500 relative overflow-hidden">
           <div
             className="absolute inset-0 opacity-20"
@@ -137,7 +137,7 @@ export default function BeneficiaryProfile() {
             className="absolute bottom-2 right-12 w-16 h-16 rounded-full bg-white/10 blur-xl"
           />
 
-          {/* Profile image + shop name side by side ON the banner */}
+          {/* Profile image + shop name ON the banner */}
           <div className="absolute bottom-0 left-6 right-6 flex items-end gap-4 pb-3">
             {/* Profile image */}
             <motion.div whileHover={{ scale: 1.05 }} className="relative flex-shrink-0">
@@ -159,7 +159,7 @@ export default function BeneficiaryProfile() {
               )}
             </motion.div>
 
-            {/* Shop name + category beside the image */}
+            {/* Shop name + owner name + category */}
             <div className="pb-2 flex-1 min-w-0">
               {category && (
                 <span className="inline-block px-3 py-1 bg-white/25 backdrop-blur-sm text-white text-xs font-bold rounded-full mb-1.5 tracking-wide uppercase">
@@ -172,12 +172,18 @@ export default function BeneficiaryProfile() {
               >
                 {beneficiary.business_name}
               </h1>
+              {/* ✅ Owner name shown below shop name */}
+              {beneficiary.name && (
+                <p className="text-sm text-white/80 font-medium mt-0.5 drop-shadow">
+                  {beneficiary.name}
+                </p>
+              )}
             </div>
           </div>
         </div>
 
         <div className="px-6 pb-6">
-          {/* Location + hours row below banner */}
+          {/* Location + hours row */}
           <div className="flex flex-wrap items-center gap-3 mt-4 mb-4">
             {beneficiary.district && (
               <span className="flex items-center gap-1 text-sm text-gray-500">
@@ -418,6 +424,18 @@ export default function BeneficiaryProfile() {
           >
             <h2 className="text-lg font-bold text-gray-800 mb-4">Business Details</h2>
             <div className="space-y-4">
+              {/* ✅ Owner name in Business Details sidebar */}
+              {beneficiary.name && (
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-rose-50 flex items-center justify-center flex-shrink-0">
+                    <User className="w-4 h-4 text-rose-500" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-400 font-medium mb-0.5">Owner</p>
+                    <p className="text-sm text-gray-700 font-medium">{beneficiary.name}</p>
+                  </div>
+                </div>
+              )}
               {beneficiary.working_hours && (
                 <div className="flex items-start gap-3">
                   <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0">
@@ -547,6 +565,10 @@ export default function BeneficiaryProfile() {
                       <p className="font-semibold text-sm text-gray-800 truncate">
                         {ben.business_name}
                       </p>
+                      {/* ✅ Owner name in Similar Nearby cards */}
+                      {ben.name && (
+                        <p className="text-xs text-gray-500 font-medium">{ben.name}</p>
+                      )}
                       <p className="text-xs text-gray-400">{ben.location}</p>
                     </div>
                   </div>

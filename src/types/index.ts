@@ -16,6 +16,7 @@ export interface District {
 
 export interface Beneficiary {
   id: string;
+  name?: string;               // ✅ ADDED: personal/owner name
   business_name: string;
   about: string;
   services: string[];
