@@ -129,7 +129,7 @@ export default function AdminLogin() {
           }}
         >
           <video
-            src="/src/assets/Character1.mp4"
+            src="https://wspwqnhjvngbolscemze.supabase.co/storage/v1/object/public/assets/Character1.mp4"
             autoPlay
             muted
             loop
