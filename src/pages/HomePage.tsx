@@ -1,11 +1,23 @@
-import { motion, useScroll, useTransform, useSpring, useInView } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Users, FolderOpen, TrendingUp, Sparkles, Star, Heart, ChevronRight, MapPin, Quote } from 'lucide-react';
+import {
+  ArrowRight, Users, FolderOpen, TrendingUp, Sparkles,
+  Star, Heart, ChevronRight, MapPin, Quote
+} from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { Button } from '../components/ui/Button';
 import { BeneficiaryCard } from '../components/beneficiary/BeneficiaryCard';
 import { CategoryCard } from '../components/category/CategoryCard';
 import { useRef } from 'react';
+
+// ✅ 6 featured districts shown on homepage with illustrations
+const FEATURED_DISTRICTS = [
+  'Chennai', 'Coimbatore', 'Madurai', 'Salem', 'Tiruchirappalli', 'Vellore',
+  'Kanchipuram', 'Thanjavur', 'Tirunelveli', 'Erode'
+];
+
+const getDistrictImage = (district: string) =>
+  `/illustrations/districts/${district.toLowerCase()}.png`;
 
 const quotes = [
   { text: "Empowering women entrepreneurs through one unified platform.", author: "Hand in Hand India" },
@@ -46,28 +58,28 @@ export default function HomePage() {
     <div className="relative overflow-x-hidden">
 
       {/* ── HERO ── */}
-      <section ref={heroRef} className="relative min-h-[95vh] flex items-center justify-center overflow-hidden">
+      <section ref={heroRef} className="relative min-h-[95vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#FDF6F0] via-[#FFF8F5] to-[#F0FAF9]">
 
-        {/* Parallax blobs */}
+        {/* Warm ambient blobs */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <motion.div style={{ y: blobY1 }}
             animate={{ x: [0, 80, 0], y: [0, -40, 0], rotate: [0, 180, 360] }}
             transition={{ duration: 22, repeat: Infinity, ease: 'linear' }}
-            className="absolute top-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-[#FF6F61]/20 to-[#FFD54F]/15 rounded-full blur-3xl"
+            className="absolute top-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-[#FF6F61]/25 to-[#FFD54F]/20 rounded-full blur-3xl"
           />
           <motion.div style={{ y: blobY2 }}
             animate={{ x: [0, -60, 0], y: [0, 60, 0], rotate: [360, 180, 0] }}
             transition={{ duration: 28, repeat: Infinity, ease: 'linear' }}
-            className="absolute bottom-1/4 left-1/4 w-[500px] h-[500px] bg-gradient-to-br from-[#26A69A]/15 to-[#26A69A]/8 rounded-full blur-3xl"
+            className="absolute bottom-1/4 left-1/4 w-[500px] h-[500px] bg-gradient-to-br from-[#26A69A]/20 to-[#26A69A]/10 rounded-full blur-3xl"
           />
           <motion.div
             animate={{ x: [0, 40, 0], y: [0, -60, 0] }}
             transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute top-1/3 left-1/3 w-72 h-72 bg-gradient-to-br from-[#FFD54F]/12 to-[#FF6F61]/10 rounded-full blur-3xl"
+            className="absolute top-1/3 left-1/3 w-72 h-72 bg-gradient-to-br from-[#FFD54F]/15 to-[#FF6F61]/12 rounded-full blur-3xl"
           />
-          {/* Grid overlay */}
-          <div className="absolute inset-0 opacity-[0.03]"
-            style={{ backgroundImage: 'linear-gradient(rgba(0,0,0,1) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,1) 1px, transparent 1px)', backgroundSize: '60px 60px' }}
+          {/* Warm dot pattern */}
+          <div className="absolute inset-0 opacity-[0.04]"
+            style={{ backgroundImage: 'radial-gradient(circle, #C2410C 1px, transparent 1px)', backgroundSize: '40px 40px' }}
           />
         </div>
 
@@ -80,7 +92,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 20, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#FF6F61]/10 to-[#26A69A]/10 backdrop-blur-sm border border-[#FF6F61]/20 rounded-full text-[#FF6F61] text-sm font-bold mb-8"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#FF6F61]/15 to-[#26A69A]/15 backdrop-blur-sm border border-[#FF6F61]/25 rounded-full text-[#C2410C] text-sm font-bold mb-8"
           >
             <motion.span animate={{ rotate: [0, 20, -20, 0] }} transition={{ duration: 2, repeat: Infinity }}>
               <Sparkles className="w-4 h-4" />
@@ -93,11 +105,11 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-slate-900 leading-tight mb-6"
+            className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-stone-900 leading-tight mb-6"
           >
             Discover{' '}
             <span className="relative inline-block">
-              <span className="gradient-text">Local Women</span>
+              <span className="bg-gradient-to-r from-[#FF6F61] to-[#26A69A] bg-clip-text text-transparent">Local Women</span>
               <motion.div
                 initial={{ scaleX: 0 }}
                 animate={{ scaleX: 1 }}
@@ -106,7 +118,7 @@ export default function HomePage() {
               />
             </span>
             <br />
-            <span className="text-slate-700">Entrepreneurs</span>
+            <span className="text-stone-700">Entrepreneurs</span>
           </motion.h1>
 
           {/* Subtitle */}
@@ -114,7 +126,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="text-lg sm:text-xl text-slate-500 max-w-2xl mx-auto mb-10 leading-relaxed"
+            className="text-lg sm:text-xl text-stone-500 max-w-2xl mx-auto mb-10 leading-relaxed"
           >
             Connect with talented SHG members running small businesses across Tamil Nadu.
             Browse services, discover unique products, and support local communities.
@@ -159,10 +171,10 @@ export default function HomePage() {
                 key={i}
                 whileHover={{ scale: 1.08, y: -4 }}
                 transition={{ type: 'spring', stiffness: 400 }}
-                className="text-center p-4 rounded-2xl bg-white/70 backdrop-blur-sm border border-white/60 shadow-lg shadow-slate-200/50 cursor-default"
+                className="text-center p-4 rounded-2xl bg-white/80 backdrop-blur-sm border border-[#FF6F61]/15 shadow-lg cursor-default"
               >
-                <div className="text-2xl sm:text-3xl font-extrabold gradient-text">{stat.value}</div>
-                <div className="text-xs text-slate-500 font-medium mt-1">{stat.label}</div>
+                <div className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-[#FF6F61] to-[#26A69A] bg-clip-text text-transparent">{stat.value}</div>
+                <div className="text-xs text-stone-500 font-medium mt-1">{stat.label}</div>
               </motion.div>
             ))}
           </motion.div>
@@ -174,7 +186,7 @@ export default function HomePage() {
           transition={{ duration: 2, repeat: Infinity }}
           className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
         >
-          <div className="w-6 h-10 rounded-full border-2 border-slate-300 flex items-start justify-center p-1.5">
+          <div className="w-6 h-10 rounded-full border-2 border-stone-300 flex items-start justify-center p-1.5">
             <motion.div
               animate={{ y: [0, 14, 0] }}
               transition={{ duration: 1.5, repeat: Infinity }}
@@ -184,60 +196,115 @@ export default function HomePage() {
         </motion.div>
       </section>
 
-      {/* ── BROWSE BY DISTRICT ── */}
-      <section className="py-24 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-blue-50/50 to-transparent pointer-events-none" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+      {/* ── BROWSE BY DISTRICT — Horizontal scroll with illustrations ── */}
+      <section className="py-20 relative bg-gradient-to-b from-[#FFF8F0] to-white">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#FF6F61]/20 to-transparent" />
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="flex items-end justify-between mb-12"
+            className="flex items-end justify-between mb-10"
           >
             <div>
-              <div className="flex items-center gap-2 text-blue-600 font-bold text-sm mb-2 uppercase tracking-wider">
+              <div className="flex items-center gap-2 text-[#C2410C] font-bold text-sm mb-2 uppercase tracking-wider">
                 <MapPin className="w-4 h-4" />
                 Browse by District
               </div>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900">Find Near You</h2>
-              <p className="mt-2 text-slate-500">Discover women entrepreneurs in your district</p>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-stone-900">Find Near You</h2>
+              <p className="mt-2 text-stone-500">Discover women entrepreneurs in your district</p>
             </div>
-            <Link to="/districts" className="hidden sm:flex items-center gap-1 text-blue-600 font-semibold hover:gap-2 transition-all text-sm">
+            <Link to="/districts" className="hidden sm:flex items-center gap-1 text-[#C2410C] font-semibold hover:gap-2 transition-all text-sm">
               All districts <ChevronRight className="w-4 h-4" />
             </Link>
           </motion.div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-            {['Chennai', 'Coimbatore', 'Madurai', 'Salem', 'Tiruchirappalli', 'Vellore'].map((district, i) => (
+          {/* ✅ Horizontal scrolling district cards with illustrations */}
+          <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+            {FEATURED_DISTRICTS.map((district, i) => (
               <motion.div
                 key={district}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, x: 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.08 }}
+                transition={{ delay: i * 0.07 }}
                 whileHover={{ y: -6, scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
+                className="flex-shrink-0 snap-start"
+                style={{ width: '160px' }}
               >
                 <Link to="/districts">
-                  <div className="bg-white/80 backdrop-blur-xl border border-white/60 rounded-2xl p-4 text-center shadow-md hover:shadow-xl hover:border-blue-200 transition-all cursor-pointer">
-                    <motion.div
-                      whileHover={{ rotate: [0, -10, 10, 0] }}
-                      transition={{ duration: 0.4 }}
-                      className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mx-auto mb-2 shadow-lg shadow-blue-200"
-                    >
-                      <MapPin className="w-5 h-5 text-white" />
-                    </motion.div>
-                    <p className="text-sm font-semibold text-slate-700">{district}</p>
+                  <div className="rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-[#FF6F61]/10 bg-white group cursor-pointer">
+                    {/* District illustration */}
+                    <div className="relative w-full aspect-square bg-[#FDF6F0] overflow-hidden">
+                      <img
+                        src={getDistrictImage(district)}
+                        alt={district}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        onError={(e) => {
+                          // Fallback: warm gradient placeholder when illustration missing
+                          const parent = (e.target as HTMLImageElement).parentElement;
+                          if (parent) {
+                            (e.target as HTMLImageElement).style.display = 'none';
+                            parent.style.background = `linear-gradient(135deg, #FFEDD5, #FDE68A)`;
+                          }
+                        }}
+                      />
+                      {/* Gradient overlay on hover */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#FF6F61]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    </div>
+                    {/* District name */}
+                    <div className="px-3 py-2.5 bg-white group-hover:bg-[#FFF1EE] transition-colors">
+                      <div className="flex items-center gap-1.5">
+                        <MapPin className="w-3 h-3 text-[#C2410C] flex-shrink-0" />
+                        <span className="text-xs font-bold text-stone-700 truncate">{district}</span>
+                      </div>
+                    </div>
                   </div>
                 </Link>
               </motion.div>
             ))}
+
+            {/* "View all" card at end */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: FEATURED_DISTRICTS.length * 0.07 }}
+              whileHover={{ y: -6, scale: 1.03 }}
+              className="flex-shrink-0 snap-start"
+              style={{ width: '160px' }}
+            >
+              <Link to="/districts">
+                <div className="rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-[#FF6F61] to-[#26A69A] cursor-pointer h-full flex flex-col items-center justify-center text-white p-6 text-center min-h-[160px]">
+                  <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center mb-3">
+                    <ChevronRight className="w-6 h-6" />
+                  </div>
+                  <p className="text-sm font-bold">All 38 Districts</p>
+                  <p className="text-xs text-white/70 mt-1">View all →</p>
+                </div>
+              </Link>
+            </motion.div>
+          </div>
+
+          {/* Mobile "All districts" link */}
+          <div className="mt-4 sm:hidden text-center">
+            <Link to="/districts" className="text-[#C2410C] font-semibold text-sm">
+              View all 38 districts →
+            </Link>
           </div>
         </div>
       </section>
 
       {/* ── CATEGORIES ── */}
-      <section className="py-24 relative">
+      <section className="py-24 relative bg-white">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#26A69A]/20 to-transparent" />
+        </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -250,8 +317,8 @@ export default function HomePage() {
                 <FolderOpen className="w-4 h-4" />
                 Browse by Category
               </div>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900">Find What You Need</h2>
-              <p className="mt-2 text-slate-500">Explore our diverse range of services and businesses</p>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-stone-900">Find What You Need</h2>
+              <p className="mt-2 text-stone-500">Explore our diverse range of services and businesses</p>
             </div>
             <Link to="/categories" className="hidden sm:flex items-center gap-1 text-[#FF6F61] font-semibold hover:gap-2 transition-all text-sm">
               View all <ChevronRight className="w-4 h-4" />
@@ -261,7 +328,7 @@ export default function HomePage() {
           {isLoading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {[1, 2, 3, 4].map(i => (
-                <div key={i} className="h-52 rounded-2xl bg-white/50 animate-pulse" />
+                <div key={i} className="h-52 rounded-2xl bg-stone-100 animate-pulse" />
               ))}
             </div>
           ) : rootCategories.length > 0 ? (
@@ -271,17 +338,20 @@ export default function HomePage() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-16 bg-white/50 rounded-2xl border border-white/60">
-              <FolderOpen className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-              <p className="text-slate-500">No categories yet. Add them from the admin panel.</p>
+            <div className="text-center py-16 bg-stone-50 rounded-2xl border border-stone-100">
+              <FolderOpen className="w-12 h-12 text-stone-300 mx-auto mb-4" />
+              <p className="text-stone-500">No categories yet. Add them from the admin panel.</p>
             </div>
           )}
         </div>
       </section>
 
       {/* ── QUOTES SECTION ── */}
-      <section ref={quotesRef} className="py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#FF6F61]/5 via-transparent to-[#26A69A]/5 pointer-events-none" />
+      <section ref={quotesRef} className="py-24 relative overflow-hidden bg-gradient-to-br from-[#FFF8F5] via-[#FDF6F0] to-[#F0FAF9]">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#FF6F61]/20 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#26A69A]/20 to-transparent" />
+        </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -289,24 +359,24 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#FF6F61]/10 rounded-full text-[#FF6F61] text-sm font-bold mb-4">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#FF6F61]/10 rounded-full text-[#C2410C] text-sm font-bold mb-4">
               <Quote className="w-4 h-4" />
               Words of Empowerment
             </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900">Voices That Inspire</h2>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-stone-900">Voices That Inspire</h2>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {quotes.map((quote, i) => (
-              <FloatingCard key={i} delay={i * 0.15} className="bg-white/80 backdrop-blur-xl border border-white/60 rounded-3xl p-8 shadow-xl shadow-slate-200/50 relative overflow-hidden cursor-default">
+              <FloatingCard key={i} delay={i * 0.15} className="bg-white/90 backdrop-blur-xl border border-[#FF6F61]/10 rounded-3xl p-8 shadow-xl relative overflow-hidden cursor-default">
                 <div className="absolute top-4 right-4 text-6xl font-black text-[#FF6F61]/8 select-none">"</div>
                 <Quote className="w-8 h-8 text-[#FF6F61]/40 mb-4" />
-                <p className="text-slate-700 leading-relaxed font-medium mb-4 text-sm">{quote.text}</p>
+                <p className="text-stone-700 leading-relaxed font-medium mb-4 text-sm">{quote.text}</p>
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#FF6F61] to-[#26A69A] flex items-center justify-center">
                     <Heart className="w-4 h-4 text-white fill-white" />
                   </div>
-                  <span className="text-xs font-semibold text-slate-500">{quote.author}</span>
+                  <span className="text-xs font-semibold text-stone-500">{quote.author}</span>
                 </div>
               </FloatingCard>
             ))}
@@ -315,8 +385,10 @@ export default function HomePage() {
       </section>
 
       {/* ── FEATURED BUSINESSES ── */}
-      <section className="py-24 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#FF6F61]/3 to-transparent pointer-events-none" />
+      <section className="py-24 relative bg-white">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-200 to-transparent" />
+        </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -324,12 +396,12 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#FFD54F]/20 rounded-full text-amber-700 text-sm font-bold mb-4">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-50 rounded-full text-amber-700 text-sm font-bold mb-4 border border-amber-100">
               <Star className="w-4 h-4 fill-amber-500 text-amber-500" />
               Featured Businesses
             </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900">Star Entrepreneurs</h2>
-            <p className="mt-2 text-slate-500">Meet our top-rated women entrepreneurs and their amazing businesses</p>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-stone-900">Star Entrepreneurs</h2>
+            <p className="mt-2 text-stone-500">Meet our top-rated women entrepreneurs and their amazing businesses</p>
           </motion.div>
 
           {featuredBeneficiaries.length > 0 ? (
@@ -339,16 +411,19 @@ export default function HomePage() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-16 bg-white/50 backdrop-blur-xl rounded-2xl border border-white/60">
-              <Heart className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-              <p className="text-slate-500">No featured businesses yet. Mark some as featured in the admin panel.</p>
+            <div className="text-center py-16 bg-stone-50 rounded-2xl border border-stone-100">
+              <Heart className="w-12 h-12 text-stone-300 mx-auto mb-4" />
+              <p className="text-stone-500">No featured businesses yet. Mark some as featured in the admin panel.</p>
             </div>
           )}
         </div>
       </section>
 
       {/* ── HOW IT WORKS ── */}
-      <section className="py-24 relative">
+      <section className="py-24 relative bg-gradient-to-br from-[#F0FAF9] to-[#FFF8F5]">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#26A69A]/20 to-transparent" />
+        </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -356,8 +431,8 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900">How It Works</h2>
-            <p className="mt-2 text-slate-500">Simple steps to connect with local businesses</p>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-stone-900">How It Works</h2>
+            <p className="mt-2 text-stone-500">Simple steps to connect with local businesses</p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -373,7 +448,7 @@ export default function HomePage() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.12 }}
                 whileHover={{ y: -8, scale: 1.02 }}
-                className="relative text-center p-8 bg-white/70 backdrop-blur-xl border border-white/60 rounded-3xl shadow-lg cursor-default"
+                className="relative text-center p-8 bg-white/80 backdrop-blur-xl border border-white/60 rounded-3xl shadow-lg cursor-default"
               >
                 <motion.div
                   whileHover={{ rotate: 360 }}
@@ -382,11 +457,11 @@ export default function HomePage() {
                 >
                   <step.icon className="w-8 h-8 text-white" />
                 </motion.div>
-                <div className="absolute top-6 right-6 text-5xl font-black text-slate-100">
+                <div className="absolute top-6 right-6 text-5xl font-black text-stone-100">
                   {String(i + 1).padStart(2, '0')}
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-3">{step.title}</h3>
-                <p className="text-slate-500 leading-relaxed">{step.desc}</p>
+                <h3 className="text-xl font-bold text-stone-900 mb-3">{step.title}</h3>
+                <p className="text-stone-500 leading-relaxed">{step.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -394,7 +469,7 @@ export default function HomePage() {
       </section>
 
       {/* ── CTA ── */}
-      <section className="py-24 relative">
+      <section className="py-24 relative bg-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}

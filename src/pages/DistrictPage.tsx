@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin, Search, Users, ChevronRight } from 'lucide-react';
 import type { Beneficiary } from '../types';
 
+// ✅ FIXED: Correct 38 official Tamil Nadu districts — consistent spelling everywhere
 const TN_DISTRICTS = [
   'Ariyalur','Chengalpattu','Chennai','Coimbatore','Cuddalore',
   'Dharmapuri','Dindigul','Erode','Kallakurichi','Kanchipuram',
@@ -16,10 +17,9 @@ const TN_DISTRICTS = [
   'Vellore','Viluppuram','Virudhunagar'
 ];
 
-// Maps district name → illustration filename
-const getDistrictImage = (district: string) => {
-  return `/illustrations/districts/${district.toLowerCase()}.png`;
-};
+// Maps district name → illustration file path
+const getDistrictImage = (district: string) =>
+  `/illustrations/districts/${district.toLowerCase()}.png`;
 
 export default function DistrictPage() {
   const [beneficiaries, setBeneficiaries] = useState<Beneficiary[]>([]);
@@ -74,7 +74,7 @@ export default function DistrictPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-        {/* District Grid — LEFT PANEL */}
+        {/* ── District Grid LEFT PANEL ── */}
         <div className="lg:col-span-1">
           <div className="grid grid-cols-2 gap-3 max-h-[680px] overflow-y-auto pr-1">
             {filteredDistricts.map((district, i) => {
@@ -91,47 +91,55 @@ export default function DistrictPage() {
                   whileHover={{ y: -3, scale: 1.02 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => setSelectedDistrict(isSelected ? null : district)}
-                  disabled={!hasData}
-                  className={`relative rounded-2xl overflow-hidden text-left transition-all duration-300 ${
+                  className={`relative rounded-2xl overflow-hidden text-left transition-all duration-300 cursor-pointer ${
                     isSelected
                       ? 'ring-2 ring-[#0F766E] shadow-xl shadow-teal-200/50'
                       : hasData
                         ? 'ring-1 ring-stone-200 hover:ring-[#0F766E]/40 hover:shadow-lg'
-                        : 'ring-1 ring-stone-100 opacity-50 cursor-not-allowed'
+                        : 'ring-1 ring-stone-100 hover:ring-stone-200'
                   }`}
                 >
-                  {/* Illustration */}
+                  {/* Illustration image */}
                   <div className="relative w-full aspect-square bg-[#FDF6F0]">
                     <img
                       src={getDistrictImage(district)}
                       alt={district}
-                      className="w-full h-full object-cover"
+                      className={`w-full h-full object-cover transition-all duration-500 ${
+                        // ✅ FIXED: grayscale when no beneficiaries, color when has data
+                        hasData
+                          ? 'grayscale-0 opacity-100'
+                          : 'grayscale opacity-50'
+                      }`}
                       onError={(e) => {
-                        // fallback if image missing
+                        // Hide broken images gracefully — show placeholder bg instead
                         (e.target as HTMLImageElement).style.display = 'none';
                       }}
                     />
-                    {/* Selected overlay */}
+
+                    {/* Selected teal overlay */}
                     {isSelected && (
-                      <div className="absolute inset-0 bg-[#0F766E]/20" />
+                      <div className="absolute inset-0 bg-[#0F766E]/15 pointer-events-none" />
                     )}
-                    {/* Count badge */}
-                    {hasData && (
-                      <span className={`absolute top-2 right-2 text-xs font-bold px-2 py-0.5 rounded-full ${
-                        isSelected
-                          ? 'bg-[#0F766E] text-white'
-                          : 'bg-white/90 text-[#0F766E]'
-                      }`}>
-                        {count}
-                      </span>
-                    )}
+
+                    {/* ✅ Count badge — shows number of beneficiaries */}
+                    <span className={`absolute top-2 right-2 text-xs font-bold px-2 py-0.5 rounded-full ${
+                      isSelected
+                        ? 'bg-[#0F766E] text-white'
+                        : hasData
+                          ? 'bg-white/90 text-[#0F766E]'
+                          : 'bg-white/70 text-stone-400'
+                    }`}>
+                      {count}
+                    </span>
                   </div>
 
-                  {/* District name */}
-                  <div className={`px-3 py-2 ${
+                  {/* District name bar — ✅ BLACK when no data, TEAL when has data */}
+                  <div className={`px-2 py-2 ${
                     isSelected
                       ? 'bg-[#0F766E] text-white'
-                      : 'bg-white text-stone-700'
+                      : hasData
+                        ? 'bg-white text-stone-700'
+                        : 'bg-stone-50 text-stone-400'
                   }`}>
                     <div className="flex items-center gap-1">
                       <MapPin className="w-3 h-3 flex-shrink-0" />
@@ -144,7 +152,7 @@ export default function DistrictPage() {
           </div>
         </div>
 
-        {/* Beneficiaries Panel — RIGHT PANEL */}
+        {/* ── Beneficiaries RIGHT PANEL ── */}
         <div className="lg:col-span-2">
           <AnimatePresence mode="wait">
             {!selectedDistrict ? (
@@ -195,6 +203,9 @@ export default function DistrictPage() {
                     src={getDistrictImage(selectedDistrict)}
                     alt={selectedDistrict}
                     className="w-16 h-16 rounded-xl object-cover flex-shrink-0 shadow-md"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = 'none';
+                    }}
                   />
                   <div>
                     <h2 className="text-xl font-bold text-stone-800">{selectedDistrict}</h2>

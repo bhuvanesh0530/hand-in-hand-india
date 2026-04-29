@@ -5,20 +5,21 @@ import type { Category } from '../../types';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Upload, X, Edit2, Trash2, Eye, ChevronDown, ChevronUp } from 'lucide-react';
 
+// ✅ FIXED: Exact 38 official Tamil Nadu districts — matches DistrictPage.tsx exactly
 const TN_DISTRICTS = [
   'Ariyalur','Chengalpattu','Chennai','Coimbatore','Cuddalore',
-  'Dharmapuri','Dindigul','Erode','Kallakurichi','Kancheepuram',
-  'Karur','Krishnagiri','Madurai','Mayiladuthurai','Nagapattinam',
-  'Namakkal','Nilgiris','Perambalur','Pudukkottai','Ramanathapuram',
-  'Ranipet','Salem','Sivaganga','Tenkasi','Thanjavur','Theni',
-  'Thoothukudi','Tiruchirappalli','Tirunelveli','Tirupathur',
-  'Tiruppur','Tiruvallur','Tiruvannamalai','Tiruvarur','Vellore',
-  'Viluppuram','Virudhunagar',
+  'Dharmapuri','Dindigul','Erode','Kallakurichi','Kanchipuram',
+  'Kanniyakumari','Karur','Krishnagiri','Madurai','Mayiladuthurai',
+  'Nagapattinam','Namakkal','Nilgiris','Perambalur','Pudukkottai',
+  'Ramanathapuram','Ranipet','Salem','Sivagangai','Tenkasi',
+  'Thanjavur','Theni','Thoothukudi','Tiruchirappalli','Tirunelveli',
+  'Tirupathur','Tiruppur','Tiruvallur','Tiruvannamalai','Tiruvarur',
+  'Vellore','Viluppuram','Virudhunagar'
 ];
 
 interface BeneficiaryRow {
   id: string;
-  name?: string | null;           // ✅ ADDED: personal name
+  name?: string | null;
   business_name?: string | null;
   district?: string | null;
   location?: string | null;
@@ -39,7 +40,7 @@ interface BeneficiaryRow {
 }
 
 const EMPTY_FORM: Omit<BeneficiaryRow, 'id' | 'categories'> = {
-  name: '',                        // ✅ ADDED
+  name: '',
   business_name: '',
   district: '',
   location: '',
@@ -151,7 +152,7 @@ export default function AdminBeneficiaries() {
     setSuccess(null);
 
     const payload = {
-      name: form.name?.trim() || null,            // ✅ ADDED
+      name: form.name?.trim() || null,
       business_name: form.business_name?.trim() || null,
       district: form.district?.trim() || null,
       location: form.location?.trim() || null,
@@ -172,14 +173,9 @@ export default function AdminBeneficiaries() {
 
     let err;
     if (editingId) {
-      ({ error: err } = await supabase
-        .from('beneficiaries')
-        .update(payload)
-        .eq('id', editingId));
+      ({ error: err } = await supabase.from('beneficiaries').update(payload).eq('id', editingId));
     } else {
-      ({ error: err } = await supabase
-        .from('beneficiaries')
-        .insert(payload));
+      ({ error: err } = await supabase.from('beneficiaries').insert(payload));
     }
 
     if (err) {
@@ -196,7 +192,7 @@ export default function AdminBeneficiaries() {
 
   function handleEdit(ben: BeneficiaryRow) {
     setForm({
-      name: ben.name || '',                        // ✅ ADDED
+      name: ben.name || '',
       business_name: ben.business_name || '',
       district: ben.district || '',
       location: ben.location || '',
@@ -252,7 +248,8 @@ export default function AdminBeneficiaries() {
             {showForm ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
             {showForm ? 'Close Form' : '+ Add Beneficiary'}
           </button>
-          <button onClick={() => navigate('/admin/dashboard')} className="text-sm text-gray-500 hover:text-gray-700 px-3 py-2 rounded-xl border border-gray-200">
+          <button onClick={() => navigate('/admin/dashboard')}
+            className="text-sm text-gray-500 hover:text-gray-700 px-3 py-2 rounded-xl border border-gray-200">
             ← Dashboard
           </button>
         </div>
@@ -277,7 +274,7 @@ export default function AdminBeneficiaries() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-              {/* ✅ NEW: Beneficiary Full Name */}
+              {/* Beneficiary Full Name */}
               <div className="sm:col-span-2">
                 <label className={label}>Beneficiary Full Name</label>
                 <input className={inp} placeholder="e.g. Prema Selvamumar"
@@ -291,7 +288,7 @@ export default function AdminBeneficiaries() {
                   value={form.business_name || ''} onChange={e => setForm(f => ({ ...f, business_name: e.target.value }))} />
               </div>
 
-              {/* District */}
+              {/* ✅ FIXED: District dropdown — matches DistrictPage exactly */}
               <div>
                 <label className={label}>District</label>
                 <select className={inp} value={form.district || ''}
@@ -301,17 +298,25 @@ export default function AdminBeneficiaries() {
                 </select>
               </div>
 
-              {/* Category */}
+              {/* ✅ FIXED: Category dropdown — from Supabase, no manual typing */}
               <div>
-                <label className={label}>Category</label>
+                <label className={label}>Category / Sector</label>
                 <select className={inp} value={form.category_id || ''}
                   onChange={e => setForm(f => ({ ...f, category_id: e.target.value }))}>
                   <option value="">Select category</option>
-                  {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                  {categories.map(c => (
+                    <option key={c.id} value={c.id}>{c.name}</option>
+                  ))}
                 </select>
+                {categories.length === 0 && (
+                  <p className="text-xs text-amber-500 mt-1">
+                    ⚠️ No categories found. Add them in{' '}
+                    <a href="/admin/categories" className="underline">Manage Categories</a> first.
+                  </p>
+                )}
               </div>
 
-              {/* Shop Address / Location */}
+              {/* Shop Address */}
               <div className="sm:col-span-2">
                 <label className={label}>Shop Address</label>
                 <input className={inp} placeholder="e.g. Ward 12, Near Community Hall, Kanchipuram"
@@ -386,7 +391,7 @@ export default function AdminBeneficiaries() {
                 </label>
               </div>
 
-              {/* ── Profile Photo Upload ── */}
+              {/* Profile Photo Upload */}
               <div className="sm:col-span-2">
                 <label className={label}>Profile Photo</label>
                 <div className="flex items-center gap-4">
@@ -412,7 +417,7 @@ export default function AdminBeneficiaries() {
                   onChange={handleProfileUpload} />
               </div>
 
-              {/* ── Gallery Photos Upload ── */}
+              {/* Gallery Photos Upload */}
               <div className="sm:col-span-2">
                 <label className={label}>Work Gallery Photos</label>
                 <button type="button"
@@ -440,7 +445,7 @@ export default function AdminBeneficiaries() {
                 )}
               </div>
 
-              {/* ── Business Card Upload ── */}
+              {/* Business Card Upload */}
               <div className="sm:col-span-2">
                 <label className={label}>Business Card Image</label>
                 <div className="flex items-center gap-4">
@@ -503,7 +508,6 @@ export default function AdminBeneficiaries() {
               transition={{ delay: i * 0.03 }}
               className="bg-white rounded-xl border border-gray-100 shadow-sm px-5 py-4 flex items-center gap-4"
             >
-              {/* Profile photo or initials */}
               {ben.profile_image ? (
                 <img src={ben.profile_image} alt={ben.business_name || ''}
                   className="w-12 h-12 rounded-xl object-cover flex-shrink-0" />
@@ -513,13 +517,11 @@ export default function AdminBeneficiaries() {
                 </div>
               )}
 
-              {/* Info — now shows personal name too */}
               <div className="flex-1 min-w-0">
                 <p className="font-semibold text-gray-800 truncate">
                   {ben.business_name || 'Unnamed'}
                   {ben.featured && <span className="ml-2 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">★ Featured</span>}
                 </p>
-                {/* ✅ Show personal name below shop name */}
                 {ben.name && (
                   <p className="text-xs text-gray-600 font-medium mt-0.5">{ben.name}</p>
                 )}
@@ -530,7 +532,6 @@ export default function AdminBeneficiaries() {
                 </p>
               </div>
 
-              {/* Actions */}
               <div className="flex items-center gap-2 flex-shrink-0">
                 <a href={`/beneficiary/${ben.id}`} target="_blank" rel="noreferrer"
                   className="p-2 text-gray-400 hover:text-blue-500 transition" title="View public profile">
