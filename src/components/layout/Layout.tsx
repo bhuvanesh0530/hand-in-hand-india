@@ -1,3 +1,4 @@
+import React from 'react';
 import type { ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import { Header } from './Header';
@@ -6,17 +7,55 @@ import { ToastContainer } from '../ui/Toast';
 
 export function Layout({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-screen relative overflow-x-hidden" style={{ background: 'var(--bg)' }}>
-      {/* Global warm background blobs */}
+    <div
+      className="min-h-screen relative overflow-x-hidden"
+      style={{ background: 'var(--bg)' }}
+    >
+      {/* ── Global warm background blobs (fixed, behind everything) ────── */}
       <div className="fixed inset-0 pointer-events-none -z-10">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-bl from-[#C2410C]/8 via-[#D97706]/5 to-transparent rounded-full blur-3xl transform translate-x-1/3 -translate-y-1/3" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-to-tr from-[#0F766E]/8 via-[#0F766E]/4 to-transparent rounded-full blur-3xl transform -translate-x-1/3 translate-y-1/3" />
-        <div className="absolute top-1/2 left-1/2 w-[800px] h-[800px] bg-gradient-to-r from-[#C2410C]/3 to-[#0F766E]/3 rounded-full blur-3xl transform -translate-x-1/2 -translate-y-1/2" />
+        {/* Top-right warm coral blob */}
+        <div
+          className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full blur-3xl"
+          style={{
+            background:
+              'radial-gradient(circle, rgba(194,65,12,0.08) 0%, rgba(217,119,6,0.05) 50%, transparent 100%)',
+            transform: 'translate(33%, -33%)',
+          }}
+        />
+
+        {/* Bottom-left teal blob */}
+        <div
+          className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full blur-3xl"
+          style={{
+            background:
+              'radial-gradient(circle, rgba(15,118,110,0.08) 0%, rgba(15,118,110,0.04) 50%, transparent 100%)',
+            transform: 'translate(-33%, 33%)',
+          }}
+        />
+
+        {/* Centre ambient blend */}
+        <div
+          className="absolute top-1/2 left-1/2 w-[800px] h-[800px] rounded-full blur-3xl"
+          style={{
+            background:
+              'radial-gradient(circle, rgba(194,65,12,0.03) 0%, rgba(15,118,110,0.03) 100%)',
+            transform: 'translate(-50%, -50%)',
+          }}
+        />
+
         {/* Subtle warm grid */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#C2410C08_1px,transparent_1px),linear-gradient(to_bottom,#C2410C08_1px,transparent_1px)] bg-[size:32px_32px]" />
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage:
+              'linear-gradient(to right, rgba(194,65,12,0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(194,65,12,0.03) 1px, transparent 1px)',
+            backgroundSize: '32px 32px',
+          }}
+        />
       </div>
 
       <Header />
+
       <motion.main
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
@@ -24,6 +63,7 @@ export function Layout({ children }: { children: ReactNode }) {
       >
         {children}
       </motion.main>
+
       <Footer />
       <ToastContainer />
     </div>

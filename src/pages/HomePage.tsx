@@ -10,40 +10,49 @@ import { BeneficiaryCard } from '../components/beneficiary/BeneficiaryCard';
 import { CategoryCard } from '../components/category/CategoryCard';
 import { useRef, useState, useCallback } from 'react';
 
-// ─── FEATURED DISTRICTS ───────────────────────────────────────────────────────
+// ─── FEATURED DISTRICTS — sorted alphabetically ───────────────────────────────
 const FEATURED_DISTRICTS = [
-  'Chennai', 'Coimbatore', 'Madurai', 'Salem', 'Tiruchirappalli', 'Vellore',
-  'Kanchipuram', 'Thanjavur', 'Tirunelveli', 'Erode',
-];
+  'Ariyalur', 'Chennai', 'Chengalpattu', 'Coimbatore', 'Cuddalore',
+  'Dharmapuri', 'Dindigul', 'Erode', 'Kallakurichi', 'Kanchipuram',
+  'Kanyakumari', 'Karur', 'Krishnagiri', 'Madurai', 'Mayiladuthurai',
+  'Nagapattinam', 'Namakkal', 'Nilgiris', 'Perambalur', 'Pudukkottai',
+  'Ramanathapuram', 'Ranipet', 'Salem', 'Sivaganga', 'Tenkasi',
+  'Thanjavur', 'Theni', 'Tiruchirappalli', 'Tirunelveli', 'Tirupathur',
+  'Tiruppur', 'Tiruvallur', 'Tiruvannamalai', 'Tiruvarur', 'Vellore',
+  'Viluppuram', 'Virudhunagar',
+].sort((a, b) => a.localeCompare(b));
 
 const getDistrictImage = (district: string) =>
   `/illustrations/districts/${district.toLowerCase()}.png`;
 
-// ─── QUOTES ───────────────────────────────────────────────────────────────────
+// ─── QUOTES — ALL from Hand in Hand India (requirement #7) ────────────────────
 const quotes = [
-  {
-    text: "This platform gave my small business a voice. Now customers from across the district know my name.",
-    author: "Meena Devi",
-    role: "SHG Member · Weaving",
-    location: "Madurai",
-    color: "from-[#FF6F61]/15 to-[#FFD54F]/10",
-    accent: "#FF6F61",
-  },
   {
     text: "Empowering women entrepreneurs through one unified platform — that's the spirit of Hand in Hand India.",
     author: "Hand in Hand India",
     role: "Program Team",
     location: "Kanchipuram",
-    color: "from-[#26A69A]/15 to-[#4DD0C4]/10",
-    accent: "#26A69A",
+    color: "from-rose-50 via-orange-50 to-amber-50",
+    accent: "#E05D4B",
+    accentLight: "#FDECEA",
   },
   {
-    text: "Supporting women to build, manage, and grow their enterprises is how we transform communities.",
-    author: "Lakshmi Priya",
-    role: "SHG Leader · Food Products",
-    location: "Salem",
-    color: "from-[#C2410C]/12 to-[#FFD54F]/10",
-    accent: "#C2410C",
+    text: "We believe every woman has the potential to build a thriving enterprise. Our mission is to give her the platform, the community, and the confidence to do so.",
+    author: "Hand in Hand India",
+    role: "Leadership Team",
+    location: "Tamil Nadu",
+    color: "from-teal-50 via-emerald-50 to-cyan-50",
+    accent: "#1D9B8A",
+    accentLight: "#E6F7F5",
+  },
+  {
+    text: "Supporting women to build, manage, and grow their enterprises is how we transform communities — one Self-Help Group at a time.",
+    author: "Hand in Hand India",
+    role: "SHG Programme",
+    location: "Tamil Nadu",
+    color: "from-amber-50 via-yellow-50 to-orange-50",
+    accent: "#B45309",
+    accentLight: "#FEF3C7",
   },
 ];
 
@@ -58,7 +67,7 @@ function NetflixCarousel<T>({
   icon: Icon,
   viewAllTo,
   viewAllLabel,
-  accentColor = '#FF6F61',
+  accentColor = '#E05D4B',
 }: {
   items: T[];
   renderItem: (item: T, i: number) => React.ReactNode;
@@ -102,13 +111,18 @@ function NetflixCarousel<T>({
       >
         <div>
           <div
-            className="flex items-center gap-2 font-bold text-sm mb-2 uppercase tracking-wider"
+            className="flex items-center gap-2 font-bold text-xs mb-2 uppercase tracking-[0.18em]"
             style={{ color: accentColor }}
           >
-            <Icon className="w-4 h-4" />
+            <Icon className="w-3.5 h-3.5" />
             {title}
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-stone-900 font-serif">{subtitle}</h2>
+          <h2
+            className="text-3xl sm:text-4xl font-extrabold text-stone-900"
+            style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+          >
+            {subtitle}
+          </h2>
         </div>
         <Link
           to={viewAllTo}
@@ -131,7 +145,6 @@ function NetflixCarousel<T>({
               exit={{ opacity: 0, x: 10 }}
               onClick={() => scroll('left')}
               className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 w-11 h-11 rounded-full bg-white shadow-xl border border-rose-100 flex items-center justify-center hover:scale-110 transition-transform"
-              style={{ boxShadow: `0 4px 24px rgba(0,0,0,0.12)` }}
             >
               <ChevronLeft className="w-5 h-5 text-stone-700" />
             </motion.button>
@@ -177,7 +190,7 @@ function NetflixCarousel<T>({
               <motion.div
                 whileHover={{ y: -6, scale: 1.03 }}
                 className="rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer h-full flex flex-col items-center justify-center text-white p-6 text-center min-h-[180px]"
-                style={{ background: `linear-gradient(135deg, ${accentColor}, #26A69A)` }}
+                style={{ background: `linear-gradient(135deg, ${accentColor}, #1D9B8A)` }}
               >
                 <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center mb-3">
                   <ChevronRight className="w-6 h-6" />
@@ -200,11 +213,33 @@ function NetflixCarousel<T>({
   );
 }
 
+// ─── DECORATIVE MANDALA / FLORAL SVG ─────────────────────────────────────────
+function FloralAccent({ className = '' }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="60" cy="60" r="55" stroke="currentColor" strokeWidth="0.5" strokeDasharray="4 4" opacity="0.4" />
+      <circle cx="60" cy="60" r="40" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
+      {[0,45,90,135,180,225,270,315].map((deg, i) => (
+        <ellipse key={i} cx="60" cy="30" rx="6" ry="14" fill="currentColor" opacity="0.15"
+          transform={`rotate(${deg} 60 60)`} />
+      ))}
+      <circle cx="60" cy="60" r="8" fill="currentColor" opacity="0.2" />
+    </svg>
+  );
+}
+
 // ─── MAIN HOME PAGE ───────────────────────────────────────────────────────────
 export default function HomePage() {
   const { categories, beneficiaries, getChildCategories, isLoading } = useApp();
-  const rootCategories = getChildCategories(null);
-  const featuredBeneficiaries = beneficiaries.filter(b => b.featured).slice(0, 6);
+
+  // Sort root categories alphabetically
+  const rootCategories = getChildCategories(null).sort((a: any, b: any) =>
+    (a.name || '').localeCompare(b.name || '')
+  );
+
+  // Show ALL beneficiaries
+  const allBeneficiaries = beneficiaries;
+
   const heroRef = useRef(null);
   const [activeQuote, setActiveQuote] = useState(0);
 
@@ -216,56 +251,69 @@ export default function HomePage() {
   const blobY2 = useTransform(scrollYProgress, [0, 1], [0, 80]);
 
   return (
-    <div className="relative overflow-x-hidden">
+    <div className="relative overflow-x-hidden" style={{ fontFamily: "'Lato', 'Helvetica Neue', sans-serif" }}>
 
-      {/* ── HERO ─────────────────────────────────────────────────────────────── */}
+      {/* ── HERO ──────────────────────────────────────────────────────────── */}
       <section
         ref={heroRef}
         className="relative min-h-[95vh] flex items-center justify-center overflow-hidden"
-        style={{ background: 'linear-gradient(135deg, #FFF5F0 0%, #FFF8F5 45%, #F0FAF9 100%)' }}
+        style={{
+          background: 'linear-gradient(150deg, #FFF9F6 0%, #FFF4EF 30%, #FFF9F7 60%, #F2FAF8 100%)',
+        }}
       >
         {/* Warm ambient blobs */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <motion.div style={{ y: blobY1 }}
+          <motion.div
+            style={{ y: blobY1, background: 'radial-gradient(circle, rgba(224,93,75,0.18) 0%, rgba(255,180,150,0.10) 60%, transparent 100%)' }}
             animate={{ x: [0, 80, 0], y: [0, -40, 0], rotate: [0, 180, 360] }}
             transition={{ duration: 22, repeat: Infinity, ease: 'linear' }}
-            className="absolute top-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-[#FF6F61]/22 to-[#FFD54F]/18 rounded-full blur-3xl"
+            className="absolute top-1/4 right-1/4 w-[500px] h-[500px] rounded-full blur-3xl"
           />
-          <motion.div style={{ y: blobY2 }}
+          <motion.div
+            style={{ y: blobY2, background: 'radial-gradient(circle, rgba(29,155,138,0.15) 0%, rgba(29,155,138,0.06) 60%, transparent 100%)' }}
             animate={{ x: [0, -60, 0], y: [0, 60, 0], rotate: [360, 180, 0] }}
             transition={{ duration: 28, repeat: Infinity, ease: 'linear' }}
-            className="absolute bottom-1/4 left-1/4 w-[500px] h-[500px] bg-gradient-to-br from-[#26A69A]/18 to-[#26A69A]/8 rounded-full blur-3xl"
+            className="absolute bottom-1/4 left-1/4 w-[600px] h-[600px] rounded-full blur-3xl"
           />
-          {/* Delicate petal pattern */}
+          {/* Warm gold accent */}
+          <motion.div
+            animate={{ scale: [1, 1.15, 1], opacity: [0.06, 0.12, 0.06] }}
+            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full blur-3xl"
+            style={{ background: 'radial-gradient(circle, rgba(245,183,84,0.18) 0%, transparent 70%)' }}
+          />
+          {/* Subtle dot grid */}
           <div
-            className="absolute inset-0 opacity-[0.035]"
+            className="absolute inset-0 opacity-[0.03]"
             style={{ backgroundImage: 'radial-gradient(circle, #C2410C 1px, transparent 1px)', backgroundSize: '44px 44px' }}
           />
+          {/* Floral decorations */}
+          <FloralAccent className="absolute top-8 right-12 w-32 h-32 text-rose-400 opacity-30" />
+          <FloralAccent className="absolute bottom-12 left-8 w-24 h-24 text-teal-400 opacity-25" />
         </div>
 
         <motion.div
           style={{ y: heroY, opacity: heroOpacity, scale: heroScale }}
           className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center"
         >
-          {/* Logo / Brand mark */}
+          {/* Logo — enlarged + prominent */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.85 }}
+            initial={{ opacity: 0, scale: 0.82 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             className="flex flex-col items-center mb-8"
           >
-            {/* 
-              *** YOUR LOGO GOES HERE ***
-              Replace /logo.png with the actual path to your uploaded transparent logo.
-              The logo will display prominently with the tagline below it.
-            */}
-            <div className="relative mb-4">
+            <div className="relative mb-5">
+              {/* Glow halo behind logo */}
+              <div
+                className="absolute inset-0 -m-8 rounded-full blur-2xl opacity-40"
+                style={{ background: 'radial-gradient(circle, rgba(224,93,75,0.35) 0%, rgba(29,155,138,0.20) 60%, transparent 100%)' }}
+              />
               <img
                 src="/logo.png"
-                alt="District Marketplace"
-                className="h-20 sm:h-24 lg:h-28 w-auto object-contain drop-shadow-lg"
+                alt="SheGrow"
+                className="relative h-32 sm:h-44 lg:h-56 w-auto object-contain drop-shadow-2xl"
                 onError={(e) => {
-                  // If logo not yet uploaded, show elegant placeholder
                   e.currentTarget.style.display = 'none';
                   const fallback = document.getElementById('hero-logo-fallback');
                   if (fallback) fallback.style.display = 'flex';
@@ -274,33 +322,46 @@ export default function HomePage() {
               {/* Fallback elegant badge */}
               <div
                 id="hero-logo-fallback"
-                className="hidden w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-gradient-to-br from-[#FF6F61] to-[#26A69A] items-center justify-center shadow-2xl shadow-[#FF6F61]/30 mx-auto"
+                className="hidden w-32 h-32 sm:w-44 sm:h-44 rounded-3xl items-center justify-center shadow-2xl mx-auto"
+                style={{ background: 'linear-gradient(135deg, #E05D4B, #1D9B8A)' }}
               >
-                <Flower2 className="w-10 h-10 text-white" />
+                <Flower2 className="w-16 h-16 text-white" />
               </div>
             </div>
-            {/* Tagline */}
-            <motion.p
-              initial={{ opacity: 0, y: 8 }}
+
+            {/* Tagline: Connect · Collaborate · Grow */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.6 }}
-              className="text-base sm:text-lg font-bold tracking-[0.2em] uppercase"
-              style={{
-                background: 'linear-gradient(90deg, #C2410C, #FF6F61, #26A69A)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-              }}
+              transition={{ delay: 0.45, duration: 0.6 }}
+              className="flex items-center gap-3"
             >
-              Connect · Collaborate · Grow
-            </motion.p>
+              <div className="h-px w-8 bg-gradient-to-r from-transparent to-rose-300" />
+              <p
+                className="text-sm sm:text-base font-bold tracking-[0.22em] uppercase"
+                style={{
+                  background: 'linear-gradient(90deg, #C2410C, #E05D4B, #1D9B8A)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                }}
+              >
+                Connect · Collaborate · Grow
+              </p>
+              <div className="h-px w-8 bg-gradient-to-l from-transparent to-teal-300" />
+            </motion.div>
           </motion.div>
 
           {/* Badge */}
           <motion.div
             initial={{ opacity: 0, y: 16, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.15 }}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#FF6F61]/12 to-[#26A69A]/12 backdrop-blur-sm border border-[#FF6F61]/20 rounded-full text-[#C2410C] text-sm font-bold mb-7"
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold mb-8"
+            style={{
+              background: 'linear-gradient(135deg, rgba(224,93,75,0.10), rgba(29,155,138,0.10))',
+              border: '1px solid rgba(224,93,75,0.22)',
+              color: '#B34030',
+            }}
           >
             <motion.span animate={{ rotate: [0, 20, -20, 0] }} transition={{ duration: 2, repeat: Infinity }}>
               <Sparkles className="w-4 h-4" />
@@ -312,30 +373,36 @@ export default function HomePage() {
           <motion.h1
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-stone-900 leading-tight mb-6 font-serif"
+            transition={{ duration: 0.8, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-stone-900 leading-tight mb-6"
+            style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
           >
             Discover{' '}
             <span className="relative inline-block">
-              <span className="bg-gradient-to-r from-[#FF6F61] to-[#26A69A] bg-clip-text text-transparent">
+              <span style={{
+                background: 'linear-gradient(90deg, #E05D4B, #C2410C)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              }}>
                 Local Women
               </span>
               <motion.div
                 initial={{ scaleX: 0 }}
                 animate={{ scaleX: 1 }}
                 transition={{ delay: 1, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                className="absolute -bottom-1 left-0 right-0 h-[3px] bg-gradient-to-r from-[#FF6F61] to-[#26A69A] rounded-full origin-left"
+                className="absolute -bottom-1 left-0 right-0 h-[3px] rounded-full origin-left"
+                style={{ background: 'linear-gradient(90deg, #E05D4B, #1D9B8A)' }}
               />
             </span>
             <br />
-            <span className="text-stone-700">Entrepreneurs</span>
+            <span style={{ color: '#3D3535' }}>Entrepreneurs</span>
           </motion.h1>
 
           {/* Subtitle */}
           <motion.p
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
+            transition={{ duration: 0.7, delay: 0.35 }}
             className="text-lg sm:text-xl text-stone-500 max-w-2xl mx-auto mb-10 leading-relaxed"
           >
             Connect with talented SHG members running small businesses across Tamil Nadu.
@@ -346,7 +413,7 @@ export default function HomePage() {
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.4 }}
+            transition={{ duration: 0.7, delay: 0.42 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
           >
             <Link to="/categories">
@@ -381,14 +448,25 @@ export default function HomePage() {
                 key={i}
                 whileHover={{ scale: 1.08, y: -4 }}
                 transition={{ type: 'spring', stiffness: 400 }}
-                className="text-center p-4 rounded-2xl bg-white/80 backdrop-blur-sm border border-[#FF6F61]/12 shadow-lg cursor-default"
+                className="text-center p-4 rounded-2xl backdrop-blur-sm cursor-default"
+                style={{
+                  background: 'rgba(255,255,255,0.85)',
+                  border: '1px solid rgba(224,93,75,0.12)',
+                  boxShadow: '0 4px 24px rgba(224,93,75,0.08)',
+                }}
               >
                 <div
-                  className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-[#FF6F61] to-[#26A69A] bg-clip-text text-transparent"
+                  className="text-2xl sm:text-3xl font-extrabold"
+                  style={{
+                    background: 'linear-gradient(135deg, #E05D4B, #1D9B8A)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    fontFamily: "'Playfair Display', serif",
+                  }}
                 >
                   {stat.value}
                 </div>
-                <div className="text-xs text-stone-500 font-medium mt-1">{stat.label}</div>
+                <div className="text-xs text-stone-500 font-semibold mt-1 tracking-wide uppercase">{stat.label}</div>
               </motion.div>
             ))}
           </motion.div>
@@ -404,15 +482,26 @@ export default function HomePage() {
             <motion.div
               animate={{ y: [0, 14, 0] }}
               transition={{ duration: 1.5, repeat: Infinity }}
-              className="w-1.5 h-1.5 rounded-full bg-[#FF6F61]"
+              className="w-1.5 h-1.5 rounded-full"
+              style={{ background: '#E05D4B' }}
             />
           </div>
         </motion.div>
       </section>
 
-      {/* ── BROWSE BY DISTRICT — Netflix Carousel ─────────────────────────── */}
-      <section className="py-20 relative bg-gradient-to-b from-[#FFF8F0] to-white">
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#FF6F61]/20 to-transparent" />
+      {/* ── BROWSE BY DISTRICT ───────────────────────────────────────────── */}
+      <section
+        className="py-24 relative"
+        style={{ background: 'linear-gradient(180deg, #FFF8F3 0%, #FFFAF8 100%)' }}
+      >
+        <div
+          className="absolute top-0 left-0 right-0 h-px"
+          style={{ background: 'linear-gradient(90deg, transparent, rgba(224,93,75,0.25), transparent)' }}
+        />
+        {/* Decorative side accent */}
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-32 rounded-r-full opacity-40"
+          style={{ background: 'linear-gradient(180deg, #E05D4B, #1D9B8A)' }} />
+
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
           <NetflixCarousel
             items={FEATURED_DISTRICTS}
@@ -429,13 +518,21 @@ export default function HomePage() {
                 initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.05 }}
-                whileHover={{ y: -6, scale: 1.03 }}
+                transition={{ delay: i * 0.04 }}
+                whileHover={{ y: -8, scale: 1.04 }}
                 whileTap={{ scale: 0.97 }}
               >
                 <Link to="/districts">
-                  <div className="rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-[#FF6F61]/10 bg-white group cursor-pointer">
-                    <div className="relative w-full aspect-square bg-[#FDF6F0] overflow-hidden">
+                  <div
+                    className="rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer group"
+                    style={{
+                      border: '1px solid rgba(224,93,75,0.12)',
+                      background: 'white',
+                      boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
+                    }}
+                  >
+                    <div className="relative w-full aspect-square overflow-hidden"
+                      style={{ background: '#FDF6F0' }}>
                       <img
                         src={getDistrictImage(district)}
                         alt={district}
@@ -448,11 +545,17 @@ export default function HomePage() {
                           }
                         }}
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#C2410C]/35 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div
+                        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        style={{ background: 'linear-gradient(to top, rgba(194,65,12,0.35), transparent)' }}
+                      />
                     </div>
-                    <div className="px-3 py-2.5 bg-white group-hover:bg-[#FFF1EE] transition-colors">
+                    <div
+                      className="px-3 py-2.5 transition-colors group-hover:bg-rose-50"
+                      style={{ background: 'white' }}
+                    >
                       <div className="flex items-center gap-1.5">
-                        <MapPin className="w-3 h-3 text-[#C2410C] flex-shrink-0" />
+                        <MapPin className="w-3 h-3 flex-shrink-0" style={{ color: '#C2410C' }} />
                         <span className="text-xs font-bold text-stone-700 truncate">{district}</span>
                       </div>
                     </div>
@@ -464,9 +567,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── BROWSE BY CATEGORY — Netflix Carousel ─────────────────────────── */}
-      <section className="py-20 relative bg-white">
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#26A69A]/20 to-transparent" />
+      {/* ── BROWSE BY CATEGORY ─────────────────────────────────────────────── */}
+      <section className="py-24 relative bg-white">
+        <div
+          className="absolute top-0 left-0 right-0 h-px"
+          style={{ background: 'linear-gradient(90deg, transparent, rgba(29,155,138,0.25), transparent)' }}
+        />
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
           {isLoading ? (
             <div className="flex gap-4 overflow-hidden pb-4">
@@ -484,7 +590,7 @@ export default function HomePage() {
               icon={FolderOpen}
               viewAllTo="/categories"
               viewAllLabel="All Categories"
-              accentColor="#FF6F61"
+              accentColor="#E05D4B"
               renderItem={(cat, i) => (
                 <motion.div
                   initial={{ opacity: 0, x: 20 }}
@@ -505,65 +611,125 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── VOICES THAT INSPIRE (Image 4 enhanced) ───────────────────────── */}
-      <section className="py-24 relative overflow-hidden bg-gradient-to-br from-[#FFF8F5] via-[#FDF6F0] to-[#F0FAF9]">
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#FF6F61]/20 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#26A69A]/20 to-transparent" />
+      {/* ── VOICES THAT INSPIRE (all 3 from Hand in Hand India) ──────────── */}
+      <section
+        className="py-28 relative overflow-hidden"
+        style={{ background: 'linear-gradient(150deg, #FFF8F5 0%, #FDF4EF 40%, #F2FAF8 100%)' }}
+      >
+        <div
+          className="absolute top-0 left-0 right-0 h-px"
+          style={{ background: 'linear-gradient(90deg, transparent, rgba(224,93,75,0.20), transparent)' }}
+        />
+        <div
+          className="absolute bottom-0 left-0 right-0 h-px"
+          style={{ background: 'linear-gradient(90deg, transparent, rgba(29,155,138,0.20), transparent)' }}
+        />
 
-        {/* Decorative large quote watermark */}
-        <div className="absolute top-8 left-8 text-[200px] font-black leading-none text-[#FF6F61]/5 select-none pointer-events-none">"</div>
+        {/* Large decorative quote marks */}
+        <div
+          className="absolute top-6 left-8 text-[220px] font-black leading-none select-none pointer-events-none"
+          style={{ color: 'rgba(224,93,75,0.05)', fontFamily: 'Georgia, serif' }}
+        >
+          "
+        </div>
+        <FloralAccent className="absolute top-8 right-16 w-40 h-40 text-rose-400 opacity-10" />
+        <FloralAccent className="absolute bottom-8 left-16 w-28 h-28 text-teal-400 opacity-10" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          {/* Section header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-14"
+            className="text-center mb-16"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#FF6F61]/10 rounded-full text-[#C2410C] text-sm font-bold mb-4 border border-[#FF6F61]/15">
+            <div
+              className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold mb-5"
+              style={{
+                background: 'rgba(224,93,75,0.10)',
+                border: '1px solid rgba(224,93,75,0.18)',
+                color: '#B34030',
+              }}
+            >
               <Quote className="w-4 h-4" />
               Words of Empowerment
             </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-stone-900 font-serif">Voices That Inspire</h2>
-            <p className="mt-3 text-stone-500 max-w-md mx-auto text-sm leading-relaxed">
-              Real stories of resilience, community, and growth from our amazing women entrepreneurs
+            <h2
+              className="text-3xl sm:text-5xl font-extrabold text-stone-900 mb-4"
+              style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+            >
+              Voices That Inspire
+            </h2>
+            <p className="text-stone-500 max-w-md mx-auto text-sm leading-relaxed">
+              Straight from the mission — our commitment to empowering women across Tamil Nadu
             </p>
           </motion.div>
 
           {/* Featured quote (large) */}
-          <motion.div
-            key={activeQuote}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="relative max-w-3xl mx-auto mb-10"
-          >
-            <div
-              className={`relative rounded-3xl p-10 sm:p-14 bg-gradient-to-br ${quotes[activeQuote].color} backdrop-blur-xl border border-white/60 shadow-2xl text-center overflow-hidden`}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeQuote}
+              initial={{ opacity: 0, y: 20, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -20, scale: 0.97 }}
+              transition={{ duration: 0.45 }}
+              className="relative max-w-3xl mx-auto mb-10"
             >
-              <div className="absolute top-6 left-6 text-7xl font-black opacity-15 select-none" style={{ color: quotes[activeQuote].accent }}>"</div>
-              <div className="absolute bottom-6 right-6 text-7xl font-black opacity-15 select-none rotate-180" style={{ color: quotes[activeQuote].accent }}>"</div>
-
-              <Quote className="w-10 h-10 mx-auto mb-6 opacity-40" style={{ color: quotes[activeQuote].accent }} />
-              <p className="text-stone-800 text-lg sm:text-xl leading-relaxed font-medium mb-8 italic relative z-10">
-                "{quotes[activeQuote].text}"
-              </p>
-              <div className="flex items-center justify-center gap-3">
+              <div
+                className={`relative rounded-3xl p-10 sm:p-16 bg-gradient-to-br ${quotes[activeQuote].color} backdrop-blur-xl shadow-2xl text-center overflow-hidden`}
+                style={{ border: '1px solid rgba(255,255,255,0.8)' }}
+              >
+                {/* Corner decorations */}
                 <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center shadow-lg"
-                  style={{ background: `linear-gradient(135deg, ${quotes[activeQuote].accent}, #26A69A)` }}
+                  className="absolute top-6 left-7 text-7xl font-black opacity-12 select-none leading-none"
+                  style={{ color: quotes[activeQuote].accent, fontFamily: 'Georgia, serif' }}
                 >
-                  <Heart className="w-5 h-5 text-white fill-white" />
+                  "
                 </div>
-                <div className="text-left">
-                  <p className="text-sm font-bold text-stone-800">{quotes[activeQuote].author}</p>
-                  <p className="text-xs text-stone-500">{quotes[activeQuote].role} · {quotes[activeQuote].location}</p>
+                <div
+                  className="absolute bottom-4 right-7 text-7xl font-black opacity-12 select-none leading-none rotate-180"
+                  style={{ color: quotes[activeQuote].accent, fontFamily: 'Georgia, serif' }}
+                >
+                  "
+                </div>
+
+                {/* Quote icon */}
+                <div
+                  className="inline-flex w-12 h-12 rounded-2xl items-center justify-center mx-auto mb-7 shadow-md"
+                  style={{ background: quotes[activeQuote].accentLight }}
+                >
+                  <Quote className="w-6 h-6" style={{ color: quotes[activeQuote].accent }} />
+                </div>
+
+                <p
+                  className="text-stone-800 text-lg sm:text-xl leading-relaxed font-medium mb-10 italic relative z-10"
+                  style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+                >
+                  "{quotes[activeQuote].text}"
+                </p>
+
+                {/* Author */}
+                <div className="flex items-center justify-center gap-3">
+                  <motion.div
+                    animate={{ scale: [1, 1.08, 1] }}
+                    transition={{ duration: 2.5, repeat: Infinity }}
+                    className="w-11 h-11 rounded-full flex items-center justify-center shadow-lg"
+                    style={{ background: `linear-gradient(135deg, ${quotes[activeQuote].accent}, #1D9B8A)` }}
+                  >
+                    <Heart className="w-5 h-5 text-white fill-white" />
+                  </motion.div>
+                  <div className="text-left">
+                    <p className="text-sm font-bold text-stone-800">{quotes[activeQuote].author}</p>
+                    <p className="text-xs text-stone-500">
+                      {quotes[activeQuote].role} · {quotes[activeQuote].location}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </AnimatePresence>
 
-          {/* Quote selector dots + mini cards */}
+          {/* Quote selector mini cards */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             {quotes.map((q, i) => (
               <motion.button
@@ -572,9 +738,12 @@ export default function HomePage() {
                 whileHover={{ y: -3 }}
                 className={`relative px-5 py-3 rounded-2xl text-sm font-semibold transition-all duration-300 border ${
                   activeQuote === i
-                    ? 'bg-white shadow-lg border-[#FF6F61]/30 text-[#C2410C]'
-                    : 'bg-white/50 border-white/40 text-stone-500 hover:bg-white/80'
+                    ? 'bg-white shadow-lg text-stone-800'
+                    : 'bg-white/50 text-stone-500 hover:bg-white/80'
                 }`}
+                style={{
+                  borderColor: activeQuote === i ? `${q.accent}44` : 'rgba(255,255,255,0.5)',
+                }}
               >
                 <div className="flex items-center gap-2">
                   <div
@@ -590,9 +759,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── FEATURED BUSINESSES ───────────────────────────────────────────── */}
+      {/* ── ALL BUSINESSES (show ALL beneficiaries) ───────────────────────── */}
       <section className="py-24 relative bg-white">
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-200 to-transparent" />
+        <div
+          className="absolute top-0 left-0 right-0 h-px"
+          style={{ background: 'linear-gradient(90deg, transparent, rgba(245,183,84,0.35), transparent)' }}
+        />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -600,32 +772,59 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-50 rounded-full text-amber-700 text-sm font-bold mb-4 border border-amber-100">
+            <div
+              className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold mb-5"
+              style={{ background: '#FEF9EC', border: '1px solid #FDE68A', color: '#92400E' }}
+            >
               <Star className="w-4 h-4 fill-amber-500 text-amber-500" />
-              Featured Businesses
+              Our Businesses
             </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-stone-900 font-serif">Star Entrepreneurs</h2>
-            <p className="mt-2 text-stone-500">Meet our top-rated women entrepreneurs and their amazing businesses</p>
+            <h2
+              className="text-3xl sm:text-4xl font-extrabold text-stone-900"
+              style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+            >
+              Meet Our Entrepreneurs
+            </h2>
+            <p className="mt-3 text-stone-500 max-w-xl mx-auto">
+              Discover talented women entrepreneurs and their amazing businesses across Tamil Nadu
+            </p>
+            {/* Decorative line */}
+            <div className="flex items-center justify-center gap-3 mt-5">
+              <div className="h-px w-12 bg-gradient-to-r from-transparent to-rose-300" />
+              <div className="w-1.5 h-1.5 rounded-full bg-rose-400" />
+              <div className="h-px w-12 bg-gradient-to-l from-transparent to-rose-300" />
+            </div>
           </motion.div>
 
-          {featuredBeneficiaries.length > 0 ? (
+          {allBeneficiaries.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {featuredBeneficiaries.map((b, i) => (
+              {allBeneficiaries.map((b, i) => (
                 <BeneficiaryCard key={b.id} beneficiary={b} index={i} />
               ))}
             </div>
           ) : (
-            <div className="text-center py-16 bg-stone-50 rounded-2xl border border-stone-100">
-              <Heart className="w-12 h-12 text-stone-300 mx-auto mb-4" />
-              <p className="text-stone-500">No featured businesses yet. Mark some as featured in the admin panel.</p>
+            <div
+              className="text-center py-16 rounded-3xl border"
+              style={{ background: '#FFF9F6', borderColor: 'rgba(224,93,75,0.10)' }}
+            >
+              <Heart className="w-12 h-12 text-rose-200 mx-auto mb-4" />
+              <p className="text-stone-500">No businesses yet. Add them from the admin panel.</p>
             </div>
           )}
         </div>
       </section>
 
-      {/* ── HOW IT WORKS ─────────────────────────────────────────────────── */}
-      <section className="py-24 relative bg-gradient-to-br from-[#F0FAF9] to-[#FFF8F5]">
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#26A69A]/20 to-transparent" />
+      {/* ── HOW IT WORKS ────────────────────────────────────────────────── */}
+      <section
+        className="py-24 relative"
+        style={{ background: 'linear-gradient(150deg, #F2FAF8 0%, #FFF9F6 100%)' }}
+      >
+        <div
+          className="absolute top-0 left-0 right-0 h-px"
+          style={{ background: 'linear-gradient(90deg, transparent, rgba(29,155,138,0.22), transparent)' }}
+        />
+        <FloralAccent className="absolute right-8 top-8 w-32 h-32 text-teal-500 opacity-10" />
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -633,15 +832,43 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-stone-900 font-serif">How It Works</h2>
-            <p className="mt-2 text-stone-500">Simple steps to connect with local businesses</p>
+            <h2
+              className="text-3xl sm:text-4xl font-extrabold text-stone-900"
+              style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+            >
+              How It Works
+            </h2>
+            <p className="mt-3 text-stone-500">Simple steps to connect with local businesses</p>
+            <div className="flex items-center justify-center gap-3 mt-5">
+              <div className="h-px w-12 bg-gradient-to-r from-transparent to-teal-300" />
+              <div className="w-1.5 h-1.5 rounded-full bg-teal-400" />
+              <div className="h-px w-12 bg-gradient-to-l from-transparent to-teal-300" />
+            </div>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { icon: FolderOpen, title: 'Browse Categories', desc: 'Explore our organized categories to find the services and products you need.', color: 'from-[#FF6F61] to-[#FFB5A8]' },
-              { icon: Users, title: 'Discover Businesses', desc: 'View detailed profiles, services, photos and contact information.', color: 'from-[#26A69A] to-[#4DD0C4]' },
-              { icon: TrendingUp, title: 'Connect & Support', desc: 'Reach out directly and support women entrepreneurs in your community.', color: 'from-[#FFD54F] to-[#F97316]' },
+              {
+                icon: FolderOpen,
+                title: 'Browse Categories',
+                desc: 'Explore our organized categories to find the services and products you need.',
+                gradient: 'linear-gradient(135deg, #E05D4B, #FFB5A8)',
+                num: '01',
+              },
+              {
+                icon: Users,
+                title: 'Discover Businesses',
+                desc: 'View detailed profiles, services, photos and contact information.',
+                gradient: 'linear-gradient(135deg, #1D9B8A, #5DCFC1)',
+                num: '02',
+              },
+              {
+                icon: TrendingUp,
+                title: 'Connect & Support',
+                desc: 'Reach out directly and support women entrepreneurs in your community.',
+                gradient: 'linear-gradient(135deg, #F59E0B, #F97316)',
+                num: '03',
+              },
             ].map((step, i) => (
               <motion.div
                 key={i}
@@ -650,17 +877,25 @@ export default function HomePage() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.12 }}
                 whileHover={{ y: -8, scale: 1.02 }}
-                className="relative text-center p-8 bg-white/80 backdrop-blur-xl border border-white/60 rounded-3xl shadow-lg cursor-default"
+                className="relative text-center p-8 rounded-3xl cursor-default"
+                style={{
+                  background: 'rgba(255,255,255,0.85)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(255,255,255,0.7)',
+                  boxShadow: '0 8px 40px rgba(0,0,0,0.07)',
+                }}
               >
                 <motion.div
                   whileHover={{ rotate: 360 }}
                   transition={{ duration: 0.6 }}
-                  className={`inline-flex w-16 h-16 rounded-2xl bg-gradient-to-br ${step.color} items-center justify-center shadow-lg mb-6`}
+                  className="inline-flex w-16 h-16 rounded-2xl items-center justify-center shadow-lg mb-6"
+                  style={{ background: step.gradient }}
                 >
                   <step.icon className="w-8 h-8 text-white" />
                 </motion.div>
-                <div className="absolute top-6 right-6 text-5xl font-black text-stone-100">
-                  {String(i + 1).padStart(2, '0')}
+                <div className="absolute top-5 right-6 text-5xl font-black text-stone-100"
+                  style={{ fontFamily: "'Playfair Display', serif" }}>
+                  {step.num}
                 </div>
                 <h3 className="text-xl font-bold text-stone-900 mb-3">{step.title}</h3>
                 <p className="text-stone-500 leading-relaxed">{step.desc}</p>
@@ -670,7 +905,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── CTA ──────────────────────────────────────────────────────────── */}
+      {/* ── CTA ─────────────────────────────────────────────────────────── */}
       <section className="py-24 relative bg-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -678,17 +913,33 @@ export default function HomePage() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             whileHover={{ scale: 1.01 }}
-            className="relative bg-gradient-to-br from-[#FF6F61] via-[#e8594d] to-[#26A69A] rounded-3xl p-10 sm:p-16 text-center overflow-hidden cursor-default"
+            className="relative rounded-3xl p-10 sm:p-16 text-center overflow-hidden cursor-default"
+            style={{ background: 'linear-gradient(135deg, #E05D4B 0%, #C2410C 50%, #1D9B8A 100%)' }}
           >
-            <div className="absolute top-0 right-0 w-72 h-72 bg-white/10 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />
-            <div className="absolute bottom-0 left-0 w-56 h-56 bg-white/10 rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2" />
+            <div
+              className="absolute top-0 right-0 w-72 h-72 rounded-full blur-3xl"
+              style={{ background: 'rgba(255,255,255,0.10)', transform: 'translate(50%, -50%)' }}
+            />
+            <div
+              className="absolute bottom-0 left-0 w-56 h-56 rounded-full blur-3xl"
+              style={{ background: 'rgba(255,255,255,0.10)', transform: 'translate(-50%, 50%)' }}
+            />
             <div
               className="absolute inset-0 opacity-[0.04]"
               style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '32px 32px' }}
             />
+            <FloralAccent className="absolute right-8 top-8 w-32 h-32 text-white opacity-10" />
+
             <div className="relative">
-              <motion.div animate={{ rotate: [0, 10, -10, 0] }} transition={{ duration: 3, repeat: Infinity }} className="text-5xl mb-6">🤝</motion.div>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4 font-serif">Ready to Support Local?</h2>
+              <motion.div animate={{ rotate: [0, 10, -10, 0] }} transition={{ duration: 3, repeat: Infinity }} className="text-5xl mb-6">
+                🤝
+              </motion.div>
+              <h2
+                className="text-3xl sm:text-4xl font-extrabold text-white mb-4"
+                style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+              >
+                Ready to Support Local?
+              </h2>
               <p className="text-white/80 mb-8 max-w-lg mx-auto text-lg">
                 Start browsing categories and discover amazing businesses run by talented women entrepreneurs in your community.
               </p>
@@ -697,7 +948,8 @@ export default function HomePage() {
                   <motion.button
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.97 }}
-                    className="px-8 py-4 bg-white text-[#FF6F61] font-extrabold rounded-2xl shadow-2xl hover:shadow-white/25 transition-all text-lg"
+                    className="px-8 py-4 bg-white font-extrabold rounded-2xl shadow-2xl transition-all text-lg"
+                    style={{ color: '#E05D4B' }}
                   >
                     Explore Categories →
                   </motion.button>
@@ -706,7 +958,8 @@ export default function HomePage() {
                   <motion.button
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.97 }}
-                    className="px-8 py-4 bg-white/20 text-white font-extrabold rounded-2xl border border-white/40 hover:bg-white/30 transition-all text-lg"
+                    className="px-8 py-4 font-extrabold rounded-2xl border transition-all text-lg"
+                    style={{ background: 'rgba(255,255,255,0.15)', color: 'white', borderColor: 'rgba(255,255,255,0.35)' }}
                   >
                     Browse Districts →
                   </motion.button>
