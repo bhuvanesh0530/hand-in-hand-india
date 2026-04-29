@@ -2,17 +2,27 @@
 @import "tailwindcss";
 
 :root {
-  --coral: #FF6F61;
-  --coral-dark: #e8594d;
-  --teal: #26A69A;
-  --teal-dark: #1d8a7f;
-  --gold: #FFD54F;
-  --bg: #F5F9F8;
+  /* ── Brand tokens (richer, warmer, more premium) ── */
+  --coral: #C2410C;
+  --coral-dark: #9a3412;
+  --coral-light: #FFEDD5;
+  --teal: #0F766E;
+  --teal-dark: #0d5f58;
+  --teal-light: #CCFBF1;
+  --gold: #D97706;
+  --gold-light: #FEF3C7;
+
+  /* ── Page surfaces ── */
+  --bg: #FDF6F0;
+  --bg-section: #FAF0E8;
   --surface: #FFFFFF;
-  --ink: #1a1a2e;
-  --ink-soft: #333333;
-  --muted: #A8B5C3;
-  --border: rgba(168, 181, 195, 0.25);
+  --surface-warm: #FFF8F4;
+
+  /* ── Typography ── */
+  --ink: #1C1917;
+  --ink-soft: #44403C;
+  --muted: #A8A29E;
+  --border: rgba(194, 65, 12, 0.12);
 }
 
 * {
@@ -34,10 +44,11 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Nunito', sans-serif;
   font-weight: 700;
+  color: var(--ink);
 }
 
 ::selection {
-  background: rgba(255, 111, 97, 0.2);
+  background: rgba(194, 65, 12, 0.15);
   color: var(--ink);
 }
 
@@ -55,12 +66,12 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: 3px;
 }
 
-/* Glass card effect */
+/* Glass card — warm tinted */
 .glass {
-  background: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 248, 244, 0.80);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(194, 65, 12, 0.10);
 }
 
 /* 3D card hover */
@@ -72,35 +83,43 @@ h1, h2, h3, h4, h5, h6 {
 .card-3d:hover {
   transform: translateY(-8px) rotateX(2deg) rotateY(-2deg);
   box-shadow:
-    0 20px 60px rgba(255, 111, 97, 0.15),
-    0 8px 25px rgba(38, 166, 154, 0.1),
-    0 2px 8px rgba(0,0,0,0.08);
+    0 20px 60px rgba(194, 65, 12, 0.12),
+    0 8px 25px rgba(15, 118, 110, 0.10),
+    0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
-/* Gradient text */
+/* Gradient text — teal to terracotta */
 .gradient-text {
-  background: linear-gradient(135deg, var(--coral), var(--teal));
+  background: linear-gradient(135deg, var(--teal), var(--coral));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Shimmer animation */
+/* Warm section divider */
+.section-warm {
+  background: linear-gradient(180deg, var(--bg) 0%, var(--bg-section) 50%, var(--bg) 100%);
+}
+
+/* Animations */
 @keyframes shimmer {
   0% { background-position: -200% center; }
   100% { background-position: 200% center; }
 }
 
-/* Float animation */
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-12px); }
 }
 
-/* Pulse glow */
 @keyframes pulseGlow {
-  0%, 100% { box-shadow: 0 0 20px rgba(255, 111, 97, 0.3); }
-  50% { box-shadow: 0 0 40px rgba(255, 111, 97, 0.6); }
+  0%, 100% { box-shadow: 0 0 20px rgba(194, 65, 12, 0.25); }
+  50% { box-shadow: 0 0 40px rgba(194, 65, 12, 0.45); }
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .float-animation {
@@ -111,7 +130,7 @@ h1, h2, h3, h4, h5, h6 {
   animation: pulseGlow 2s ease-in-out infinite;
 }
 
-/* Page transition */
+/* Page transitions (used by AnimatePresence in App.tsx) */
 .page-enter {
   opacity: 0;
   transform: translateY(20px);

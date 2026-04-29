@@ -24,25 +24,15 @@ export default function BeneficiaryProfile() {
         .select('*')
         .eq('id', id)
         .single();
-      if (!ben) {
-        setLoading(false);
-        return;
-      }
+      if (!ben) { setLoading(false); return; }
       setBeneficiary(ben as Beneficiary);
 
       const { data: cat } = await supabase
-        .from('categories')
-        .select('*')
-        .eq('id', ben.category_id)
-        .single();
+        .from('categories').select('*').eq('id', ben.category_id).single();
       setCategory(cat);
 
       const { data: sim } = await supabase
-        .from('beneficiaries')
-        .select('*')
-        .eq('district', ben.district)
-        .neq('id', id)
-        .limit(3);
+        .from('beneficiaries').select('*').eq('district', ben.district).neq('id', id).limit(3);
       setSimilar((sim as Beneficiary[]) || []);
 
       setLoading(false);
@@ -56,7 +46,7 @@ export default function BeneficiaryProfile() {
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-          className="rounded-full h-12 w-12 border-b-2 border-blue-600"
+          className="rounded-full h-12 w-12 border-b-2 border-[#0F766E]"
         />
       </div>
     );
@@ -64,7 +54,7 @@ export default function BeneficiaryProfile() {
 
   if (!beneficiary) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-gray-400">
+      <div className="min-h-screen flex items-center justify-center text-stone-400">
         Beneficiary not found.
       </div>
     );
@@ -72,32 +62,22 @@ export default function BeneficiaryProfile() {
 
   const services =
     typeof beneficiary.services === 'string'
-      ? (beneficiary.services as string)
-          .split(',')
-          .map((s) => s.trim())
-          .filter(Boolean)
+      ? (beneficiary.services as string).split(',').map((s) => s.trim()).filter(Boolean)
       : beneficiary.services || [];
 
   const gallery = beneficiary.gallery_images || [];
-
-  const prevImage = () => {
-    setActiveImage((i) => (i - 1 + gallery.length) % gallery.length);
-  };
-
-  const nextImage = () => {
-    setActiveImage((i) => (i + 1) % gallery.length);
-  };
-
+  const prevImage = () => setActiveImage((i) => (i - 1 + gallery.length) % gallery.length);
+  const nextImage = () => setActiveImage((i) => (i + 1) % gallery.length);
   const isEmbedUrl = beneficiary.map_link?.includes('/maps/embed');
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
 
       {/* Breadcrumb */}
-      <nav className="text-sm text-gray-500 mb-6 flex items-center gap-2 flex-wrap">
-        <Link to="/" className="hover:text-blue-600 transition">Home</Link>
+      <nav className="text-sm text-stone-400 mb-6 flex items-center gap-2 flex-wrap">
+        <Link to="/" className="hover:text-[#C2410C] transition">Home</Link>
         <span>/</span>
-        <Link to="/districts" className="hover:text-blue-600 transition">Districts</Link>
+        <Link to="/districts" className="hover:text-[#C2410C] transition">Districts</Link>
         {beneficiary.district && (
           <>
             <span>/</span>
@@ -105,24 +85,21 @@ export default function BeneficiaryProfile() {
           </>
         )}
         <span>/</span>
-        <span className="text-gray-800 font-medium truncate">
-          {beneficiary.business_name}
-        </span>
+        <span className="text-stone-700 font-medium truncate">{beneficiary.business_name}</span>
       </nav>
 
       {/* HERO CARD */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-3xl shadow-xl overflow-hidden mb-6"
+        className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl border border-[#C2410C]/10 overflow-hidden mb-6"
       >
-        {/* Banner */}
-        <div className="h-44 bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-500 relative overflow-hidden">
+        {/* Banner — warm terracotta-to-teal gradient */}
+        <div className="h-44 bg-gradient-to-r from-[#C2410C] via-[#b83d0a] to-[#0F766E] relative overflow-hidden">
           <div
             className="absolute inset-0 opacity-20"
             style={{
-              backgroundImage:
-                'radial-gradient(rgba(255,255,255,0.4) 1px, transparent 1px)',
+              backgroundImage: 'radial-gradient(rgba(255,255,255,0.4) 1px, transparent 1px)',
               backgroundSize: '18px 18px',
             }}
           />
@@ -139,7 +116,6 @@ export default function BeneficiaryProfile() {
 
           {/* Profile image + shop name ON the banner */}
           <div className="absolute bottom-0 left-6 right-6 flex items-end gap-4 pb-3">
-            {/* Profile image */}
             <motion.div whileHover={{ scale: 1.05 }} className="relative flex-shrink-0">
               {beneficiary.profile_image ? (
                 <img
@@ -148,8 +124,8 @@ export default function BeneficiaryProfile() {
                   className="w-24 h-24 rounded-2xl object-cover object-center border-4 border-white shadow-xl"
                 />
               ) : (
-                <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-blue-100 to-blue-200 border-4 border-white shadow-xl flex items-center justify-center">
-                  <User className="w-12 h-12 text-blue-400" />
+                <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-[#FFEDD5] to-[#CCFBF1] border-4 border-white shadow-xl flex items-center justify-center">
+                  <User className="w-12 h-12 text-[#C2410C]/60" />
                 </div>
               )}
               {beneficiary.featured && (
@@ -159,7 +135,7 @@ export default function BeneficiaryProfile() {
               )}
             </motion.div>
 
-            {/* Shop name + owner name + category */}
+            {/* Shop name + owner + category badge */}
             <div className="pb-2 flex-1 min-w-0">
               {category && (
                 <span className="inline-block px-3 py-1 bg-white/25 backdrop-blur-sm text-white text-xs font-bold rounded-full mb-1.5 tracking-wide uppercase">
@@ -172,7 +148,6 @@ export default function BeneficiaryProfile() {
               >
                 {beneficiary.business_name}
               </h1>
-              {/* ✅ Owner name shown below shop name */}
               {beneficiary.name && (
                 <p className="text-sm text-white/80 font-medium mt-0.5 drop-shadow">
                   {beneficiary.name}
@@ -186,19 +161,17 @@ export default function BeneficiaryProfile() {
           {/* Location + hours row */}
           <div className="flex flex-wrap items-center gap-3 mt-4 mb-4">
             {beneficiary.district && (
-              <span className="flex items-center gap-1 text-sm text-gray-500">
-                <MapPin className="w-3.5 h-3.5 text-blue-500" />
+              <span className="flex items-center gap-1 text-sm text-stone-500">
+                <MapPin className="w-3.5 h-3.5 text-[#0F766E]" />
                 {beneficiary.district}
               </span>
             )}
             {beneficiary.location && (
-              <span className="text-sm text-gray-400">
-                · {beneficiary.location}
-              </span>
+              <span className="text-sm text-stone-400">· {beneficiary.location}</span>
             )}
             {beneficiary.working_hours && (
-              <span className="flex items-center gap-1 text-sm text-gray-500">
-                <Clock className="w-3.5 h-3.5 text-green-500" />
+              <span className="flex items-center gap-1 text-sm text-stone-500">
+                <Clock className="w-3.5 h-3.5 text-[#D97706]" />
                 {beneficiary.working_hours}
               </span>
             )}
@@ -211,7 +184,7 @@ export default function BeneficiaryProfile() {
                 href={'tel:' + beneficiary.mobile_number}
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-semibold shadow-lg shadow-blue-200"
+                className="flex items-center gap-2 px-5 py-2.5 bg-[#0F766E] text-white rounded-xl text-sm font-semibold shadow-lg shadow-teal-200"
               >
                 <Phone className="w-4 h-4" />
                 Call Now
@@ -237,7 +210,7 @@ export default function BeneficiaryProfile() {
                 rel="noreferrer"
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-2 px-5 py-2.5 bg-orange-500 text-white rounded-xl text-sm font-semibold shadow-lg shadow-orange-200"
+                className="flex items-center gap-2 px-5 py-2.5 bg-[#C2410C] text-white rounded-xl text-sm font-semibold shadow-lg shadow-orange-200"
               >
                 <MapPin className="w-4 h-4" />
                 Get Directions
@@ -252,7 +225,7 @@ export default function BeneficiaryProfile() {
                 <motion.span
                   key={i}
                   whileHover={{ scale: 1.05 }}
-                  className="px-3 py-1 bg-indigo-50 text-indigo-700 text-xs font-semibold rounded-lg cursor-default"
+                  className="px-3 py-1 bg-[#CCFBF1] text-[#0F766E] text-xs font-semibold rounded-lg cursor-default"
                 >
                   {service}
                 </motion.span>
@@ -273,10 +246,10 @@ export default function BeneficiaryProfile() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
+            className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-sm border border-[#C2410C]/10 p-6"
           >
-            <h2 className="text-lg font-bold text-gray-800 mb-3">About</h2>
-            <p className="text-gray-600 leading-relaxed">
+            <h2 className="text-lg font-bold text-stone-800 mb-3">About</h2>
+            <p className="text-stone-600 leading-relaxed">
               {beneficiary.about || 'No description available.'}
             </p>
           </motion.div>
@@ -286,12 +259,12 @@ export default function BeneficiaryProfile() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
+            className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-sm border border-[#C2410C]/10 p-6"
           >
-            <h2 className="text-lg font-bold text-gray-800 mb-4">Work Gallery</h2>
+            <h2 className="text-lg font-bold text-stone-800 mb-4">Work Gallery</h2>
             {gallery.length > 0 ? (
               <div>
-                <div className="relative rounded-xl overflow-hidden bg-gray-100 mb-3 flex items-center justify-center" style={{ minHeight: '200px', maxHeight: '420px' }}>
+                <div className="relative rounded-xl overflow-hidden bg-stone-100 mb-3 flex items-center justify-center" style={{ minHeight: '200px', maxHeight: '420px' }}>
                   <AnimatePresence mode="wait">
                     <motion.img
                       key={activeImage}
@@ -323,12 +296,7 @@ export default function BeneficiaryProfile() {
                           <button
                             key={i}
                             onClick={() => setActiveImage(i)}
-                            className={
-                              'rounded-full transition-all ' +
-                              (activeImage === i
-                                ? 'bg-white w-4 h-2'
-                                : 'bg-white/50 w-2 h-2')
-                            }
+                            className={'rounded-full transition-all ' + (activeImage === i ? 'bg-white w-4 h-2' : 'bg-white/50 w-2 h-2')}
                           />
                         ))}
                       </div>
@@ -341,12 +309,7 @@ export default function BeneficiaryProfile() {
                       key={i}
                       onClick={() => setActiveImage(i)}
                       whileHover={{ scale: 1.05 }}
-                      className={
-                        'flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ' +
-                        (activeImage === i
-                          ? 'border-blue-500'
-                          : 'border-transparent opacity-60')
-                      }
+                      className={'flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ' + (activeImage === i ? 'border-[#0F766E]' : 'border-transparent opacity-60')}
                     >
                       <img src={img} alt="" className="w-full h-full object-cover" />
                     </motion.button>
@@ -354,11 +317,9 @@ export default function BeneficiaryProfile() {
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center py-10 bg-gray-50 rounded-xl">
-                <ImageIcon className="w-10 h-10 text-gray-300 mb-2" />
-                <p className="text-sm text-gray-400">
-                  This beneficiary prefers not to share photos
-                </p>
+              <div className="flex flex-col items-center justify-center py-10 bg-stone-50 rounded-xl">
+                <ImageIcon className="w-10 h-10 text-stone-300 mb-2" />
+                <p className="text-sm text-stone-400">This beneficiary prefers not to share photos</p>
               </div>
             )}
           </motion.div>
@@ -369,9 +330,9 @@ export default function BeneficiaryProfile() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
+              className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-sm border border-[#C2410C]/10 p-6"
             >
-              <h2 className="text-lg font-bold text-gray-800 mb-4">Location</h2>
+              <h2 className="text-lg font-bold text-stone-800 mb-4">Location</h2>
               {isEmbedUrl ? (
                 <>
                   <div className="rounded-xl overflow-hidden aspect-video">
@@ -389,7 +350,7 @@ export default function BeneficiaryProfile() {
                     href={beneficiary.map_link}
                     target="_blank"
                     rel="noreferrer"
-                    className="mt-3 flex items-center gap-2 text-blue-600 text-sm font-medium hover:underline"
+                    className="mt-3 flex items-center gap-2 text-[#0F766E] text-sm font-medium hover:underline"
                   >
                     <ExternalLink className="w-4 h-4" />
                     Open in Google Maps
@@ -402,7 +363,7 @@ export default function BeneficiaryProfile() {
                   rel="noreferrer"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="flex items-center justify-center gap-3 w-full py-4 bg-orange-50 border-2 border-orange-200 rounded-xl text-orange-600 font-semibold hover:bg-orange-100 transition"
+                  className="flex items-center justify-center gap-3 w-full py-4 bg-[#FFEDD5] border-2 border-[#C2410C]/30 rounded-xl text-[#C2410C] font-semibold hover:bg-[#fed7aa] transition"
                 >
                   <MapPin className="w-5 h-5" />
                   Open Location in Google Maps
@@ -420,45 +381,42 @@ export default function BeneficiaryProfile() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15 }}
-            className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
+            className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-sm border border-[#C2410C]/10 p-6"
           >
-            <h2 className="text-lg font-bold text-gray-800 mb-4">Business Details</h2>
+            <h2 className="text-lg font-bold text-stone-800 mb-4">Business Details</h2>
             <div className="space-y-4">
-              {/* ✅ Owner name in Business Details sidebar */}
               {beneficiary.name && (
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-rose-50 flex items-center justify-center flex-shrink-0">
-                    <User className="w-4 h-4 text-rose-500" />
+                  <div className="w-8 h-8 rounded-lg bg-[#FFEDD5] flex items-center justify-center flex-shrink-0">
+                    <User className="w-4 h-4 text-[#C2410C]" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-400 font-medium mb-0.5">Owner</p>
-                    <p className="text-sm text-gray-700 font-medium">{beneficiary.name}</p>
+                    <p className="text-xs text-stone-400 font-medium mb-0.5">Owner</p>
+                    <p className="text-sm text-stone-700 font-medium">{beneficiary.name}</p>
                   </div>
                 </div>
               )}
               {beneficiary.working_hours && (
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0">
-                    <Clock className="w-4 h-4 text-blue-500" />
+                  <div className="w-8 h-8 rounded-lg bg-[#FEF3C7] flex items-center justify-center flex-shrink-0">
+                    <Clock className="w-4 h-4 text-[#D97706]" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-400 font-medium mb-0.5">Working Hours</p>
-                    <p className="text-sm text-gray-700 font-medium">
-                      {beneficiary.working_hours}
-                    </p>
+                    <p className="text-xs text-stone-400 font-medium mb-0.5">Working Hours</p>
+                    <p className="text-sm text-stone-700 font-medium">{beneficiary.working_hours}</p>
                   </div>
                 </div>
               )}
               {beneficiary.mobile_number && (
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center flex-shrink-0">
-                    <Phone className="w-4 h-4 text-green-500" />
+                  <div className="w-8 h-8 rounded-lg bg-[#CCFBF1] flex items-center justify-center flex-shrink-0">
+                    <Phone className="w-4 h-4 text-[#0F766E]" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-400 font-medium mb-0.5">Phone</p>
+                    <p className="text-xs text-stone-400 font-medium mb-0.5">Phone</p>
                     <a
                       href={'tel:' + beneficiary.mobile_number}
-                      className="text-sm text-blue-600 font-semibold hover:underline"
+                      className="text-sm text-[#0F766E] font-semibold hover:underline"
                     >
                       {beneficiary.mobile_number}
                     </a>
@@ -474,9 +432,9 @@ export default function BeneficiaryProfile() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
+              className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-sm border border-[#C2410C]/10 p-6"
             >
-              <h2 className="text-lg font-bold text-gray-800 mb-4">Social Media</h2>
+              <h2 className="text-lg font-bold text-stone-800 mb-4">Social Media</h2>
               <div className="space-y-3">
                 {beneficiary.social_instagram && (
                   <motion.a
@@ -498,10 +456,10 @@ export default function BeneficiaryProfile() {
                     target="_blank"
                     rel="noreferrer"
                     whileHover={{ x: 4 }}
-                    className="flex items-center gap-3 text-sm text-blue-600 hover:underline font-medium"
+                    className="flex items-center gap-3 text-sm text-[#0F766E] hover:underline font-medium"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
-                      <ThumbsUp className="w-4 h-4 text-blue-500" />
+                    <div className="w-8 h-8 rounded-lg bg-[#CCFBF1] flex items-center justify-center">
+                      <ThumbsUp className="w-4 h-4 text-[#0F766E]" />
                     </div>
                     Facebook
                   </motion.a>
@@ -517,14 +475,10 @@ export default function BeneficiaryProfile() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25 }}
               whileHover={{ scale: 1.02 }}
-              className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
+              className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-sm border border-[#C2410C]/10 p-6"
             >
-              <h2 className="text-lg font-bold text-gray-800 mb-4">Business Card</h2>
-              <img
-                src={beneficiary.business_card}
-                alt="Business Card"
-                className="w-full rounded-xl shadow-sm"
-              />
+              <h2 className="text-lg font-bold text-stone-800 mb-4">Business Card</h2>
+              <img src={beneficiary.business_card} alt="Business Card" className="w-full rounded-xl shadow-sm" />
             </motion.div>
           )}
         </div>
@@ -538,7 +492,7 @@ export default function BeneficiaryProfile() {
           transition={{ delay: 0.4 }}
           className="mt-8"
         >
-          <h2 className="text-xl font-bold text-gray-800 mb-4">
+          <h2 className="text-xl font-bold text-stone-800 mb-4">
             Similar Nearby in {beneficiary.district}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -549,27 +503,18 @@ export default function BeneficiaryProfile() {
                 transition={{ type: 'spring', stiffness: 400 }}
               >
                 <Link to={'/beneficiary/' + ben.id}>
-                  <div className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all p-4 flex gap-3">
+                  <div className="bg-white/90 backdrop-blur-xl rounded-xl border border-[#C2410C]/10 shadow-sm hover:shadow-md hover:border-[#0F766E]/30 transition-all p-4 flex gap-3">
                     {ben.profile_image ? (
-                      <img
-                        src={ben.profile_image}
-                        alt={ben.business_name}
-                        className="w-12 h-12 rounded-xl object-cover flex-shrink-0"
-                      />
+                      <img src={ben.profile_image} alt={ben.business_name} className="w-12 h-12 rounded-xl object-cover flex-shrink-0" />
                     ) : (
-                      <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center flex-shrink-0">
-                        <User className="w-6 h-6 text-blue-400" />
+                      <div className="w-12 h-12 rounded-xl bg-[#CCFBF1] flex items-center justify-center flex-shrink-0">
+                        <User className="w-6 h-6 text-[#0F766E]" />
                       </div>
                     )}
                     <div className="min-w-0">
-                      <p className="font-semibold text-sm text-gray-800 truncate">
-                        {ben.business_name}
-                      </p>
-                      {/* ✅ Owner name in Similar Nearby cards */}
-                      {ben.name && (
-                        <p className="text-xs text-gray-500 font-medium">{ben.name}</p>
-                      )}
-                      <p className="text-xs text-gray-400">{ben.location}</p>
+                      <p className="font-semibold text-sm text-stone-800 truncate">{ben.business_name}</p>
+                      {ben.name && <p className="text-xs text-stone-500 font-medium">{ben.name}</p>}
+                      <p className="text-xs text-stone-400">{ben.location}</p>
                     </div>
                   </div>
                 </Link>

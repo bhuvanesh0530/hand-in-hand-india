@@ -37,7 +37,7 @@ export default function BeneficiaryPage() {
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center">
       <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-        className="rounded-full h-12 w-12 border-b-2 border-[#FF6F61]" />
+        className="rounded-full h-12 w-12 border-b-2 border-[#C2410C]" />
     </div>
   );
 
@@ -47,24 +47,28 @@ export default function BeneficiaryPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-10">
-      <nav className="text-sm text-gray-500 mb-6">
-        <Link to="/" className="hover:text-[#FF6F61] transition">Home</Link>
+      {/* Breadcrumb */}
+      <nav className="text-sm text-stone-400 mb-6">
+        <Link to="/" className="hover:text-[#C2410C] transition">Home</Link>
         <span className="mx-2">/</span>
-        <Link to="/categories" className="hover:text-[#FF6F61] transition">Categories</Link>
+        <Link to="/categories" className="hover:text-[#C2410C] transition">Categories</Link>
         <span className="mx-2">/</span>
-        <span className="text-gray-800 font-medium">{category?.name}</span>
+        <span className="text-stone-700 font-medium">{category?.name}</span>
       </nav>
 
-      <motion.h1 className="text-3xl font-bold text-gray-800 mb-2"
-        initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+      <motion.h1
+        className="text-3xl font-bold text-stone-800 mb-2"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
         {category?.name}
       </motion.h1>
-      <p className="text-gray-500 mb-8">{category?.description}</p>
+      <p className="text-stone-500 mb-8">{category?.description}</p>
 
       {beneficiaries.length === 0 ? (
         <div className="text-center py-20">
-          <Users className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <p className="text-gray-400">No beneficiaries found in this category.</p>
+          <Users className="w-12 h-12 text-stone-300 mx-auto mb-4" />
+          <p className="text-stone-400">No beneficiaries found in this category.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
