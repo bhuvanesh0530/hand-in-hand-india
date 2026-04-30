@@ -13,9 +13,9 @@ interface ButtonProps {
 }
 
 const variants = {
-  primary: 'bg-gradient-to-r from-[#FF6F61] to-[#e8594d] text-white shadow-lg shadow-[#FF6F61]/25 hover:shadow-[#FF6F61]/40',
-  secondary: 'bg-gradient-to-r from-[#26A69A] to-[#1d8a7f] text-white shadow-lg shadow-[#26A69A]/25 hover:shadow-[#26A69A]/40',
-  ghost: 'bg-white/70 backdrop-blur-sm border border-white/60 text-slate-700 hover:bg-white/90',
+  primary: 'bg-gradient-to-r from-[#4338CA] to-[#3730A3] text-white shadow-lg shadow-[#4338CA]/25 hover:shadow-[#4338CA]/40',
+  secondary: 'bg-gradient-to-r from-[#F59E0B] to-[#D97706] text-white shadow-lg shadow-[#F59E0B]/25 hover:shadow-[#F59E0B]/40',
+  ghost: 'bg-white/70 backdrop-blur-sm border border-indigo-200 text-indigo-700 hover:bg-indigo-50',
   danger: 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg shadow-red-500/25',
 };
 

@@ -10,7 +10,7 @@ import { BeneficiaryCard } from '../components/beneficiary/BeneficiaryCard';
 import { CategoryCard } from '../components/category/CategoryCard';
 import { useRef, useState, useCallback } from 'react';
 
-// ─── FEATURED DISTRICTS — sorted alphabetically ───────────────────────────────
+// ─── FEATURED DISTRICTS ───────────────────────────────────────────────────────
 const FEATURED_DISTRICTS = [
   'Ariyalur', 'Chennai', 'Chengalpattu', 'Coimbatore', 'Cuddalore',
   'Dharmapuri', 'Dindigul', 'Erode', 'Kallakurichi', 'Kanchipuram',
@@ -25,49 +25,42 @@ const FEATURED_DISTRICTS = [
 const getDistrictImage = (district: string) =>
   `/illustrations/districts/${district.toLowerCase()}.png`;
 
-// ─── QUOTES — ALL from Hand in Hand India (requirement #7) ────────────────────
+// ─── QUOTES ───────────────────────────────────────────────────────────────────
 const quotes = [
   {
     text: "Empowering women entrepreneurs through one unified platform — that's the spirit of Hand in Hand India.",
     author: "Hand in Hand India",
     role: "Program Team",
     location: "Kanchipuram",
-    color: "from-rose-50 via-orange-50 to-amber-50",
-    accent: "#E05D4B",
-    accentLight: "#FDECEA",
+    color: "from-indigo-50 via-violet-50 to-purple-50",
+    accent: "#4338CA",
+    accentLight: "#EEF2FF",
   },
   {
     text: "We believe every woman has the potential to build a thriving enterprise. Our mission is to give her the platform, the community, and the confidence to do so.",
     author: "Hand in Hand India",
     role: "Leadership Team",
     location: "Tamil Nadu",
-    color: "from-teal-50 via-emerald-50 to-cyan-50",
-    accent: "#1D9B8A",
-    accentLight: "#E6F7F5",
+    color: "from-amber-50 via-yellow-50 to-orange-50",
+    accent: "#D97706",
+    accentLight: "#FEF3C7",
   },
   {
     text: "Supporting women to build, manage, and grow their enterprises is how we transform communities — one Self-Help Group at a time.",
     author: "Hand in Hand India",
     role: "SHG Programme",
     location: "Tamil Nadu",
-    color: "from-amber-50 via-yellow-50 to-orange-50",
-    accent: "#B45309",
-    accentLight: "#FEF3C7",
+    color: "from-violet-50 via-indigo-50 to-blue-50",
+    accent: "#3730A3",
+    accentLight: "#E0E7FF",
   },
 ];
 
 // ─── NETFLIX CAROUSEL ─────────────────────────────────────────────────────────
 function NetflixCarousel<T>({
-  items,
-  renderItem,
-  cardWidth = 180,
-  gap = 16,
-  title,
-  subtitle,
-  icon: Icon,
-  viewAllTo,
-  viewAllLabel,
-  accentColor = '#E05D4B',
+  items, renderItem, cardWidth = 180, gap = 16,
+  title, subtitle, icon: Icon, viewAllTo, viewAllLabel,
+  accentColor = '#4338CA',
 }: {
   items: T[];
   renderItem: (item: T, i: number) => React.ReactNode;
@@ -83,7 +76,6 @@ function NetflixCarousel<T>({
   const trackRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
-
   const scrollStep = (cardWidth + gap) * 3;
 
   const updateScrollState = useCallback(() => {
@@ -102,7 +94,6 @@ function NetflixCarousel<T>({
 
   return (
     <div className="relative">
-      {/* Section header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -118,8 +109,8 @@ function NetflixCarousel<T>({
             {title}
           </div>
           <h2
-            className="text-3xl sm:text-4xl font-extrabold text-stone-900"
-            style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+            className="text-3xl sm:text-4xl font-extrabold"
+            style={{ fontFamily: "'Playfair Display', Georgia, serif", color: '#1E1B4B' }}
           >
             {subtitle}
           </h2>
@@ -133,9 +124,7 @@ function NetflixCarousel<T>({
         </Link>
       </motion.div>
 
-      {/* Carousel wrapper */}
       <div className="relative group/carousel">
-        {/* Left arrow */}
         <AnimatePresence>
           {canScrollLeft && (
             <motion.button
@@ -144,14 +133,14 @@ function NetflixCarousel<T>({
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 10 }}
               onClick={() => scroll('left')}
-              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 w-11 h-11 rounded-full bg-white shadow-xl border border-rose-100 flex items-center justify-center hover:scale-110 transition-transform"
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 w-11 h-11 rounded-full bg-white shadow-xl flex items-center justify-center hover:scale-110 transition-transform"
+              style={{ border: '1px solid #C7D2FE' }}
             >
-              <ChevronLeft className="w-5 h-5 text-stone-700" />
+              <ChevronLeft className="w-5 h-5" style={{ color: '#3730A3' }} />
             </motion.button>
           )}
         </AnimatePresence>
 
-        {/* Right arrow */}
         <AnimatePresence>
           {canScrollRight && (
             <motion.button
@@ -160,14 +149,14 @@ function NetflixCarousel<T>({
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -10 }}
               onClick={() => scroll('right')}
-              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 w-11 h-11 rounded-full bg-white shadow-xl border border-rose-100 flex items-center justify-center hover:scale-110 transition-transform"
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 w-11 h-11 rounded-full bg-white shadow-xl flex items-center justify-center hover:scale-110 transition-transform"
+              style={{ border: '1px solid #C7D2FE' }}
             >
-              <ChevronRight className="w-5 h-5 text-stone-700" />
+              <ChevronRight className="w-5 h-5" style={{ color: '#3730A3' }} />
             </motion.button>
           )}
         </AnimatePresence>
 
-        {/* Track */}
         <div
           ref={trackRef}
           onScroll={updateScrollState}
@@ -175,11 +164,7 @@ function NetflixCarousel<T>({
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {items.map((item, i) => (
-            <div
-              key={i}
-              className="flex-shrink-0 snap-start"
-              style={{ width: `${cardWidth}px` }}
-            >
+            <div key={i} className="flex-shrink-0 snap-start" style={{ width: `${cardWidth}px` }}>
               {renderItem(item, i)}
             </div>
           ))}
@@ -190,7 +175,7 @@ function NetflixCarousel<T>({
               <motion.div
                 whileHover={{ y: -6, scale: 1.03 }}
                 className="rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer h-full flex flex-col items-center justify-center text-white p-6 text-center min-h-[180px]"
-                style={{ background: `linear-gradient(135deg, ${accentColor}, #1D9B8A)` }}
+                style={{ background: 'linear-gradient(135deg, #4338CA, #F59E0B)' }}
               >
                 <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center mb-3">
                   <ChevronRight className="w-6 h-6" />
@@ -203,7 +188,6 @@ function NetflixCarousel<T>({
         </div>
       </div>
 
-      {/* Mobile link */}
       <div className="mt-3 sm:hidden text-center">
         <Link to={viewAllTo} className="font-semibold text-sm" style={{ color: accentColor }}>
           {viewAllLabel} →
@@ -213,7 +197,7 @@ function NetflixCarousel<T>({
   );
 }
 
-// ─── DECORATIVE MANDALA / FLORAL SVG ─────────────────────────────────────────
+// ─── DECORATIVE FLORAL SVG ────────────────────────────────────────────────────
 function FloralAccent({ className = '' }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -232,13 +216,12 @@ function FloralAccent({ className = '' }: { className?: string }) {
 export default function HomePage() {
   const { categories, beneficiaries, getChildCategories, isLoading } = useApp();
 
-  // Sort root categories alphabetically
   const rootCategories = getChildCategories(null).sort((a: any, b: any) =>
     (a.name || '').localeCompare(b.name || '')
   );
 
-  // Show ALL beneficiaries
-  const allBeneficiaries = beneficiaries;
+  // Only featured/marked beneficiaries
+  const allBeneficiaries = beneficiaries.filter(b => b.featured === true);
 
   const heroRef = useRef(null);
   const [activeQuote, setActiveQuote] = useState(0);
@@ -251,52 +234,48 @@ export default function HomePage() {
   const blobY2 = useTransform(scrollYProgress, [0, 1], [0, 80]);
 
   return (
-    <div className="relative overflow-x-hidden" style={{ fontFamily: "'Lato', 'Helvetica Neue', sans-serif" }}>
+    <div className="relative overflow-x-hidden" style={{ fontFamily: "'Nunito', 'Helvetica Neue', sans-serif" }}>
 
       {/* ── HERO ──────────────────────────────────────────────────────────── */}
       <section
         ref={heroRef}
         className="relative min-h-[95vh] flex items-center justify-center overflow-hidden"
-        style={{
-          background: 'linear-gradient(150deg, #FFF9F6 0%, #FFF4EF 30%, #FFF9F7 60%, #F2FAF8 100%)',
-        }}
+        style={{ background: 'linear-gradient(150deg, #F5F5FF 0%, #EEF2FF 30%, #F5F5FF 60%, #FFFBEB 100%)' }}
       >
-        {/* Warm ambient blobs */}
+        {/* Ambient blobs — Indigo + Saffron */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <motion.div
-            style={{ y: blobY1, background: 'radial-gradient(circle, rgba(224,93,75,0.18) 0%, rgba(255,180,150,0.10) 60%, transparent 100%)' }}
+            style={{ y: blobY1, background: 'radial-gradient(circle, rgba(67,56,202,0.15) 0%, rgba(99,102,241,0.08) 60%, transparent 100%)' }}
             animate={{ x: [0, 80, 0], y: [0, -40, 0], rotate: [0, 180, 360] }}
             transition={{ duration: 22, repeat: Infinity, ease: 'linear' }}
             className="absolute top-1/4 right-1/4 w-[500px] h-[500px] rounded-full blur-3xl"
           />
           <motion.div
-            style={{ y: blobY2, background: 'radial-gradient(circle, rgba(29,155,138,0.15) 0%, rgba(29,155,138,0.06) 60%, transparent 100%)' }}
+            style={{ y: blobY2, background: 'radial-gradient(circle, rgba(245,158,11,0.15) 0%, rgba(245,158,11,0.06) 60%, transparent 100%)' }}
             animate={{ x: [0, -60, 0], y: [0, 60, 0], rotate: [360, 180, 0] }}
             transition={{ duration: 28, repeat: Infinity, ease: 'linear' }}
             className="absolute bottom-1/4 left-1/4 w-[600px] h-[600px] rounded-full blur-3xl"
           />
-          {/* Warm gold accent */}
           <motion.div
-            animate={{ scale: [1, 1.15, 1], opacity: [0.06, 0.12, 0.06] }}
+            animate={{ scale: [1, 1.15, 1], opacity: [0.05, 0.10, 0.05] }}
             transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full blur-3xl"
-            style={{ background: 'radial-gradient(circle, rgba(245,183,84,0.18) 0%, transparent 70%)' }}
+            style={{ background: 'radial-gradient(circle, rgba(67,56,202,0.12) 0%, transparent 70%)' }}
           />
-          {/* Subtle dot grid */}
+          {/* Dot grid */}
           <div
             className="absolute inset-0 opacity-[0.03]"
-            style={{ backgroundImage: 'radial-gradient(circle, #C2410C 1px, transparent 1px)', backgroundSize: '44px 44px' }}
+            style={{ backgroundImage: 'radial-gradient(circle, #4338CA 1px, transparent 1px)', backgroundSize: '44px 44px' }}
           />
-          {/* Floral decorations */}
-          <FloralAccent className="absolute top-8 right-12 w-32 h-32 text-rose-400 opacity-30" />
-          <FloralAccent className="absolute bottom-12 left-8 w-24 h-24 text-teal-400 opacity-25" />
+          <FloralAccent className="absolute top-8 right-12 w-32 h-32 text-indigo-400 opacity-20" />
+          <FloralAccent className="absolute bottom-12 left-8 w-24 h-24 text-amber-400 opacity-20" />
         </div>
 
         <motion.div
           style={{ y: heroY, opacity: heroOpacity, scale: heroScale }}
           className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center"
         >
-          {/* Logo — enlarged + prominent */}
+          {/* Logo */}
           <motion.div
             initial={{ opacity: 0, scale: 0.82 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -304,14 +283,13 @@ export default function HomePage() {
             className="flex flex-col items-center mb-8"
           >
             <div className="relative mb-5">
-              {/* Glow halo behind logo */}
               <div
                 className="absolute inset-0 -m-8 rounded-full blur-2xl opacity-40"
-                style={{ background: 'radial-gradient(circle, rgba(224,93,75,0.35) 0%, rgba(29,155,138,0.20) 60%, transparent 100%)' }}
+                style={{ background: 'radial-gradient(circle, rgba(67,56,202,0.30) 0%, rgba(245,158,11,0.15) 60%, transparent 100%)' }}
               />
               <img
                 src="/logo.png"
-                alt="SheGrow"
+                alt="Hand in Hand India"
                 className="relative h-32 sm:h-44 lg:h-56 w-auto object-contain drop-shadow-2xl"
                 onError={(e) => {
                   e.currentTarget.style.display = 'none';
@@ -319,35 +297,34 @@ export default function HomePage() {
                   if (fallback) fallback.style.display = 'flex';
                 }}
               />
-              {/* Fallback elegant badge */}
               <div
                 id="hero-logo-fallback"
                 className="hidden w-32 h-32 sm:w-44 sm:h-44 rounded-3xl items-center justify-center shadow-2xl mx-auto"
-                style={{ background: 'linear-gradient(135deg, #E05D4B, #1D9B8A)' }}
+                style={{ background: 'linear-gradient(135deg, #4338CA, #F59E0B)' }}
               >
                 <Flower2 className="w-16 h-16 text-white" />
               </div>
             </div>
 
-            {/* Tagline: Connect · Collaborate · Grow */}
+            {/* Tagline */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.45, duration: 0.6 }}
               className="flex items-center gap-3"
             >
-              <div className="h-px w-8 bg-gradient-to-r from-transparent to-rose-300" />
+              <div className="h-px w-8 bg-gradient-to-r from-transparent to-indigo-300" />
               <p
                 className="text-sm sm:text-base font-bold tracking-[0.22em] uppercase"
                 style={{
-                  background: 'linear-gradient(90deg, #C2410C, #E05D4B, #1D9B8A)',
+                  background: 'linear-gradient(90deg, #3730A3, #4338CA, #F59E0B)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                 }}
               >
                 Connect · Collaborate · Grow
               </p>
-              <div className="h-px w-8 bg-gradient-to-l from-transparent to-teal-300" />
+              <div className="h-px w-8 bg-gradient-to-l from-transparent to-amber-300" />
             </motion.div>
           </motion.div>
 
@@ -358,9 +335,9 @@ export default function HomePage() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold mb-8"
             style={{
-              background: 'linear-gradient(135deg, rgba(224,93,75,0.10), rgba(29,155,138,0.10))',
-              border: '1px solid rgba(224,93,75,0.22)',
-              color: '#B34030',
+              background: 'linear-gradient(135deg, rgba(67,56,202,0.08), rgba(245,158,11,0.08))',
+              border: '1px solid rgba(67,56,202,0.20)',
+              color: '#3730A3',
             }}
           >
             <motion.span animate={{ rotate: [0, 20, -20, 0] }} transition={{ duration: 2, repeat: Infinity }}>
@@ -374,13 +351,13 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
-            className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-stone-900 leading-tight mb-6"
-            style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+            className="text-5xl sm:text-6xl lg:text-7xl font-extrabold leading-tight mb-6"
+            style={{ fontFamily: "'Playfair Display', Georgia, serif", color: '#1E1B4B' }}
           >
             Discover{' '}
             <span className="relative inline-block">
               <span style={{
-                background: 'linear-gradient(90deg, #E05D4B, #C2410C)',
+                background: 'linear-gradient(90deg, #4338CA, #3730A3)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
               }}>
@@ -391,11 +368,11 @@ export default function HomePage() {
                 animate={{ scaleX: 1 }}
                 transition={{ delay: 1, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
                 className="absolute -bottom-1 left-0 right-0 h-[3px] rounded-full origin-left"
-                style={{ background: 'linear-gradient(90deg, #E05D4B, #1D9B8A)' }}
+                style={{ background: 'linear-gradient(90deg, #4338CA, #F59E0B)' }}
               />
             </span>
             <br />
-            <span style={{ color: '#3D3535' }}>Entrepreneurs</span>
+            <span style={{ color: '#1E1B4B' }}>Entrepreneurs</span>
           </motion.h1>
 
           {/* Subtitle */}
@@ -403,7 +380,8 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.35 }}
-            className="text-lg sm:text-xl text-stone-500 max-w-2xl mx-auto mb-10 leading-relaxed"
+            className="text-lg sm:text-xl max-w-2xl mx-auto mb-10 leading-relaxed"
+            style={{ color: '#6B7280' }}
           >
             Connect with talented SHG members running small businesses across Tamil Nadu.
             Browse services, discover unique products, and support local communities.
@@ -440,7 +418,7 @@ export default function HomePage() {
             className="grid grid-cols-3 gap-5 max-w-md mx-auto"
           >
             {[
-              { value: `${beneficiaries.length}+`, label: 'Businesses' },
+              { value: `${allBeneficiaries.length}+`, label: 'Businesses' },
               { value: `${categories.length}+`, label: 'Categories' },
               { value: '100%', label: 'Women-Led' },
             ].map((stat, i) => (
@@ -450,15 +428,15 @@ export default function HomePage() {
                 transition={{ type: 'spring', stiffness: 400 }}
                 className="text-center p-4 rounded-2xl backdrop-blur-sm cursor-default"
                 style={{
-                  background: 'rgba(255,255,255,0.85)',
-                  border: '1px solid rgba(224,93,75,0.12)',
-                  boxShadow: '0 4px 24px rgba(224,93,75,0.08)',
+                  background: 'rgba(255,255,255,0.90)',
+                  border: '1px solid rgba(67,56,202,0.12)',
+                  boxShadow: '0 4px 24px rgba(67,56,202,0.08)',
                 }}
               >
                 <div
                   className="text-2xl sm:text-3xl font-extrabold"
                   style={{
-                    background: 'linear-gradient(135deg, #E05D4B, #1D9B8A)',
+                    background: 'linear-gradient(135deg, #4338CA, #F59E0B)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                     fontFamily: "'Playfair Display', serif",
@@ -466,7 +444,9 @@ export default function HomePage() {
                 >
                   {stat.value}
                 </div>
-                <div className="text-xs text-stone-500 font-semibold mt-1 tracking-wide uppercase">{stat.label}</div>
+                <div className="text-xs font-semibold mt-1 tracking-wide uppercase" style={{ color: '#9CA3AF' }}>
+                  {stat.label}
+                </div>
               </motion.div>
             ))}
           </motion.div>
@@ -478,12 +458,13 @@ export default function HomePage() {
           transition={{ duration: 2, repeat: Infinity }}
           className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
         >
-          <div className="w-6 h-10 rounded-full border-2 border-stone-300 flex items-start justify-center p-1.5">
+          <div className="w-6 h-10 rounded-full border-2 flex items-start justify-center p-1.5"
+            style={{ borderColor: '#C7D2FE' }}>
             <motion.div
               animate={{ y: [0, 14, 0] }}
               transition={{ duration: 1.5, repeat: Infinity }}
               className="w-1.5 h-1.5 rounded-full"
-              style={{ background: '#E05D4B' }}
+              style={{ background: '#4338CA' }}
             />
           </div>
         </motion.div>
@@ -492,15 +473,12 @@ export default function HomePage() {
       {/* ── BROWSE BY DISTRICT ───────────────────────────────────────────── */}
       <section
         className="py-24 relative"
-        style={{ background: 'linear-gradient(180deg, #FFF8F3 0%, #FFFAF8 100%)' }}
+        style={{ background: 'linear-gradient(180deg, #F5F5FF 0%, #EEF2FF 100%)' }}
       >
-        <div
-          className="absolute top-0 left-0 right-0 h-px"
-          style={{ background: 'linear-gradient(90deg, transparent, rgba(224,93,75,0.25), transparent)' }}
-        />
-        {/* Decorative side accent */}
+        <div className="absolute top-0 left-0 right-0 h-px"
+          style={{ background: 'linear-gradient(90deg, transparent, rgba(67,56,202,0.25), transparent)' }} />
         <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-32 rounded-r-full opacity-40"
-          style={{ background: 'linear-gradient(180deg, #E05D4B, #1D9B8A)' }} />
+          style={{ background: 'linear-gradient(180deg, #4338CA, #F59E0B)' }} />
 
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
           <NetflixCarousel
@@ -512,7 +490,7 @@ export default function HomePage() {
             icon={MapPin}
             viewAllTo="/districts"
             viewAllLabel="All 38 Districts"
-            accentColor="#C2410C"
+            accentColor="#3730A3"
             renderItem={(district, i) => (
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
@@ -526,13 +504,13 @@ export default function HomePage() {
                   <div
                     className="rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer group"
                     style={{
-                      border: '1px solid rgba(224,93,75,0.12)',
+                      border: '1px solid rgba(67,56,202,0.12)',
                       background: 'white',
                       boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
                     }}
                   >
                     <div className="relative w-full aspect-square overflow-hidden"
-                      style={{ background: '#FDF6F0' }}>
+                      style={{ background: '#EEF2FF' }}>
                       <img
                         src={getDistrictImage(district)}
                         alt={district}
@@ -541,22 +519,22 @@ export default function HomePage() {
                           const parent = (e.target as HTMLImageElement).parentElement;
                           if (parent) {
                             (e.target as HTMLImageElement).style.display = 'none';
-                            parent.style.background = 'linear-gradient(135deg, #FFEDD5, #FDE68A)';
+                            parent.style.background = 'linear-gradient(135deg, #EEF2FF, #FEF3C7)';
                           }
                         }}
                       />
                       <div
                         className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                        style={{ background: 'linear-gradient(to top, rgba(194,65,12,0.35), transparent)' }}
+                        style={{ background: 'linear-gradient(to top, rgba(55,48,163,0.35), transparent)' }}
                       />
                     </div>
                     <div
-                      className="px-3 py-2.5 transition-colors group-hover:bg-rose-50"
+                      className="px-3 py-2.5 transition-colors group-hover:bg-indigo-50"
                       style={{ background: 'white' }}
                     >
                       <div className="flex items-center gap-1.5">
-                        <MapPin className="w-3 h-3 flex-shrink-0" style={{ color: '#C2410C' }} />
-                        <span className="text-xs font-bold text-stone-700 truncate">{district}</span>
+                        <MapPin className="w-3 h-3 flex-shrink-0" style={{ color: '#4338CA' }} />
+                        <span className="text-xs font-bold truncate" style={{ color: '#1E1B4B' }}>{district}</span>
                       </div>
                     </div>
                   </div>
@@ -569,15 +547,14 @@ export default function HomePage() {
 
       {/* ── BROWSE BY CATEGORY ─────────────────────────────────────────────── */}
       <section className="py-24 relative bg-white">
-        <div
-          className="absolute top-0 left-0 right-0 h-px"
-          style={{ background: 'linear-gradient(90deg, transparent, rgba(29,155,138,0.25), transparent)' }}
-        />
+        <div className="absolute top-0 left-0 right-0 h-px"
+          style={{ background: 'linear-gradient(90deg, transparent, rgba(245,158,11,0.30), transparent)' }} />
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
           {isLoading ? (
             <div className="flex gap-4 overflow-hidden pb-4">
-              {[1, 2, 3, 4, 5].map(i => (
-                <div key={i} className="flex-shrink-0 w-44 h-56 rounded-2xl bg-stone-100 animate-pulse" />
+              {[1,2,3,4,5].map(i => (
+                <div key={i} className="flex-shrink-0 w-44 h-56 rounded-2xl animate-pulse"
+                  style={{ background: '#EEF2FF' }} />
               ))}
             </div>
           ) : rootCategories.length > 0 ? (
@@ -590,7 +567,7 @@ export default function HomePage() {
               icon={FolderOpen}
               viewAllTo="/categories"
               viewAllLabel="All Categories"
-              accentColor="#E05D4B"
+              accentColor="#4338CA"
               renderItem={(cat, i) => (
                 <motion.div
                   initial={{ opacity: 0, x: 20 }}
@@ -603,40 +580,33 @@ export default function HomePage() {
               )}
             />
           ) : (
-            <div className="text-center py-16 bg-stone-50 rounded-2xl border border-stone-100">
-              <FolderOpen className="w-12 h-12 text-stone-300 mx-auto mb-4" />
-              <p className="text-stone-500">No categories yet. Add them from the admin panel.</p>
+            <div className="text-center py-16 rounded-2xl border"
+              style={{ background: '#F5F5FF', borderColor: 'rgba(67,56,202,0.10)' }}>
+              <FolderOpen className="w-12 h-12 mx-auto mb-4" style={{ color: '#C7D2FE' }} />
+              <p style={{ color: '#6B7280' }}>No categories yet. Add them from the admin panel.</p>
             </div>
           )}
         </div>
       </section>
 
-      {/* ── VOICES THAT INSPIRE (all 3 from Hand in Hand India) ──────────── */}
+      {/* ── VOICES THAT INSPIRE ───────────────────────────────────────────── */}
       <section
         className="py-28 relative overflow-hidden"
-        style={{ background: 'linear-gradient(150deg, #FFF8F5 0%, #FDF4EF 40%, #F2FAF8 100%)' }}
+        style={{ background: 'linear-gradient(150deg, #F5F5FF 0%, #EEF2FF 40%, #FFFBEB 100%)' }}
       >
-        <div
-          className="absolute top-0 left-0 right-0 h-px"
-          style={{ background: 'linear-gradient(90deg, transparent, rgba(224,93,75,0.20), transparent)' }}
-        />
-        <div
-          className="absolute bottom-0 left-0 right-0 h-px"
-          style={{ background: 'linear-gradient(90deg, transparent, rgba(29,155,138,0.20), transparent)' }}
-        />
+        <div className="absolute top-0 left-0 right-0 h-px"
+          style={{ background: 'linear-gradient(90deg, transparent, rgba(67,56,202,0.20), transparent)' }} />
+        <div className="absolute bottom-0 left-0 right-0 h-px"
+          style={{ background: 'linear-gradient(90deg, transparent, rgba(245,158,11,0.20), transparent)' }} />
 
-        {/* Large decorative quote marks */}
         <div
           className="absolute top-6 left-8 text-[220px] font-black leading-none select-none pointer-events-none"
-          style={{ color: 'rgba(224,93,75,0.05)', fontFamily: 'Georgia, serif' }}
-        >
-          "
-        </div>
-        <FloralAccent className="absolute top-8 right-16 w-40 h-40 text-rose-400 opacity-10" />
-        <FloralAccent className="absolute bottom-8 left-16 w-28 h-28 text-teal-400 opacity-10" />
+          style={{ color: 'rgba(67,56,202,0.04)', fontFamily: 'Georgia, serif' }}
+        >"</div>
+        <FloralAccent className="absolute top-8 right-16 w-40 h-40 text-indigo-400 opacity-10" />
+        <FloralAccent className="absolute bottom-8 left-16 w-28 h-28 text-amber-400 opacity-10" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          {/* Section header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -646,26 +616,25 @@ export default function HomePage() {
             <div
               className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold mb-5"
               style={{
-                background: 'rgba(224,93,75,0.10)',
-                border: '1px solid rgba(224,93,75,0.18)',
-                color: '#B34030',
+                background: 'rgba(67,56,202,0.08)',
+                border: '1px solid rgba(67,56,202,0.18)',
+                color: '#3730A3',
               }}
             >
               <Quote className="w-4 h-4" />
               Words of Empowerment
             </div>
             <h2
-              className="text-3xl sm:text-5xl font-extrabold text-stone-900 mb-4"
-              style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+              className="text-3xl sm:text-5xl font-extrabold mb-4"
+              style={{ fontFamily: "'Playfair Display', Georgia, serif", color: '#1E1B4B' }}
             >
               Voices That Inspire
             </h2>
-            <p className="text-stone-500 max-w-md mx-auto text-sm leading-relaxed">
+            <p className="max-w-md mx-auto text-sm leading-relaxed" style={{ color: '#6B7280' }}>
               Straight from the mission — our commitment to empowering women across Tamil Nadu
             </p>
           </motion.div>
 
-          {/* Featured quote (large) */}
           <AnimatePresence mode="wait">
             <motion.div
               key={activeQuote}
@@ -676,24 +645,18 @@ export default function HomePage() {
               className="relative max-w-3xl mx-auto mb-10"
             >
               <div
-                className={`relative rounded-3xl p-10 sm:p-16 bg-gradient-to-br ${quotes[activeQuote].color} backdrop-blur-xl shadow-2xl text-center overflow-hidden`}
+                className={`relative rounded-3xl p-10 sm:p-16 bg-gradient-to-br ${quotes[activeQuote].color} shadow-2xl text-center overflow-hidden`}
                 style={{ border: '1px solid rgba(255,255,255,0.8)' }}
               >
-                {/* Corner decorations */}
                 <div
-                  className="absolute top-6 left-7 text-7xl font-black opacity-12 select-none leading-none"
-                  style={{ color: quotes[activeQuote].accent, fontFamily: 'Georgia, serif' }}
-                >
-                  "
-                </div>
+                  className="absolute top-6 left-7 text-7xl font-black select-none leading-none"
+                  style={{ color: quotes[activeQuote].accent, opacity: 0.12, fontFamily: 'Georgia, serif' }}
+                >"</div>
                 <div
-                  className="absolute bottom-4 right-7 text-7xl font-black opacity-12 select-none leading-none rotate-180"
-                  style={{ color: quotes[activeQuote].accent, fontFamily: 'Georgia, serif' }}
-                >
-                  "
-                </div>
+                  className="absolute bottom-4 right-7 text-7xl font-black select-none leading-none rotate-180"
+                  style={{ color: quotes[activeQuote].accent, opacity: 0.12, fontFamily: 'Georgia, serif' }}
+                >"</div>
 
-                {/* Quote icon */}
                 <div
                   className="inline-flex w-12 h-12 rounded-2xl items-center justify-center mx-auto mb-7 shadow-md"
                   style={{ background: quotes[activeQuote].accentLight }}
@@ -702,25 +665,24 @@ export default function HomePage() {
                 </div>
 
                 <p
-                  className="text-stone-800 text-lg sm:text-xl leading-relaxed font-medium mb-10 italic relative z-10"
-                  style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+                  className="text-lg sm:text-xl leading-relaxed font-medium mb-10 italic relative z-10"
+                  style={{ fontFamily: "'Playfair Display', Georgia, serif", color: '#1E1B4B' }}
                 >
                   "{quotes[activeQuote].text}"
                 </p>
 
-                {/* Author */}
                 <div className="flex items-center justify-center gap-3">
                   <motion.div
                     animate={{ scale: [1, 1.08, 1] }}
                     transition={{ duration: 2.5, repeat: Infinity }}
                     className="w-11 h-11 rounded-full flex items-center justify-center shadow-lg"
-                    style={{ background: `linear-gradient(135deg, ${quotes[activeQuote].accent}, #1D9B8A)` }}
+                    style={{ background: `linear-gradient(135deg, ${quotes[activeQuote].accent}, #F59E0B)` }}
                   >
                     <Heart className="w-5 h-5 text-white fill-white" />
                   </motion.div>
                   <div className="text-left">
-                    <p className="text-sm font-bold text-stone-800">{quotes[activeQuote].author}</p>
-                    <p className="text-xs text-stone-500">
+                    <p className="text-sm font-bold" style={{ color: '#1E1B4B' }}>{quotes[activeQuote].author}</p>
+                    <p className="text-xs" style={{ color: '#6B7280' }}>
                       {quotes[activeQuote].role} · {quotes[activeQuote].location}
                     </p>
                   </div>
@@ -729,7 +691,6 @@ export default function HomePage() {
             </motion.div>
           </AnimatePresence>
 
-          {/* Quote selector mini cards */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             {quotes.map((q, i) => (
               <motion.button
@@ -737,34 +698,29 @@ export default function HomePage() {
                 onClick={() => setActiveQuote(i)}
                 whileHover={{ y: -3 }}
                 className={`relative px-5 py-3 rounded-2xl text-sm font-semibold transition-all duration-300 border ${
-                  activeQuote === i
-                    ? 'bg-white shadow-lg text-stone-800'
-                    : 'bg-white/50 text-stone-500 hover:bg-white/80'
+                  activeQuote === i ? 'bg-white shadow-lg' : 'bg-white/50 hover:bg-white/80'
                 }`}
                 style={{
+                  color: activeQuote === i ? '#1E1B4B' : '#6B7280',
                   borderColor: activeQuote === i ? `${q.accent}44` : 'rgba(255,255,255,0.5)',
                 }}
               >
                 <div className="flex items-center gap-2">
-                  <div
-                    className="w-2 h-2 rounded-full flex-shrink-0 transition-all duration-300"
-                    style={{ background: activeQuote === i ? q.accent : '#d1d5db' }}
-                  />
+                  <div className="w-2 h-2 rounded-full flex-shrink-0 transition-all duration-300"
+                    style={{ background: activeQuote === i ? q.accent : '#D1D5DB' }} />
                   <span className="truncate max-w-[140px]">{q.author}</span>
                 </div>
-                <p className="text-xs text-stone-400 mt-0.5 text-left truncate max-w-[140px]">{q.role}</p>
+                <p className="text-xs mt-0.5 text-left truncate max-w-[140px]" style={{ color: '#9CA3AF' }}>{q.role}</p>
               </motion.button>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── ALL BUSINESSES (show ALL beneficiaries) ───────────────────────── */}
+      {/* ── OUR BUSINESSES ────────────────────────────────────────────────── */}
       <section className="py-24 relative bg-white">
-        <div
-          className="absolute top-0 left-0 right-0 h-px"
-          style={{ background: 'linear-gradient(90deg, transparent, rgba(245,183,84,0.35), transparent)' }}
-        />
+        <div className="absolute top-0 left-0 right-0 h-px"
+          style={{ background: 'linear-gradient(90deg, transparent, rgba(245,158,11,0.35), transparent)' }} />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -774,25 +730,24 @@ export default function HomePage() {
           >
             <div
               className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold mb-5"
-              style={{ background: '#FEF9EC', border: '1px solid #FDE68A', color: '#92400E' }}
+              style={{ background: '#FEF3C7', border: '1px solid #FDE68A', color: '#92400E' }}
             >
               <Star className="w-4 h-4 fill-amber-500 text-amber-500" />
               Our Businesses
             </div>
             <h2
-              className="text-3xl sm:text-4xl font-extrabold text-stone-900"
-              style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+              className="text-3xl sm:text-4xl font-extrabold"
+              style={{ fontFamily: "'Playfair Display', Georgia, serif", color: '#1E1B4B' }}
             >
               Meet Our Entrepreneurs
             </h2>
-            <p className="mt-3 text-stone-500 max-w-xl mx-auto">
+            <p className="mt-3 max-w-xl mx-auto" style={{ color: '#6B7280' }}>
               Discover talented women entrepreneurs and their amazing businesses across Tamil Nadu
             </p>
-            {/* Decorative line */}
             <div className="flex items-center justify-center gap-3 mt-5">
-              <div className="h-px w-12 bg-gradient-to-r from-transparent to-rose-300" />
-              <div className="w-1.5 h-1.5 rounded-full bg-rose-400" />
-              <div className="h-px w-12 bg-gradient-to-l from-transparent to-rose-300" />
+              <div className="h-px w-12 bg-gradient-to-r from-transparent to-indigo-300" />
+              <div className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
+              <div className="h-px w-12 bg-gradient-to-l from-transparent to-indigo-300" />
             </div>
           </motion.div>
 
@@ -805,25 +760,23 @@ export default function HomePage() {
           ) : (
             <div
               className="text-center py-16 rounded-3xl border"
-              style={{ background: '#FFF9F6', borderColor: 'rgba(224,93,75,0.10)' }}
+              style={{ background: '#F5F5FF', borderColor: 'rgba(67,56,202,0.10)' }}
             >
-              <Heart className="w-12 h-12 text-rose-200 mx-auto mb-4" />
-              <p className="text-stone-500">No businesses yet. Add them from the admin panel.</p>
+              <Heart className="w-12 h-12 mx-auto mb-4" style={{ color: '#C7D2FE' }} />
+              <p style={{ color: '#6B7280' }}>No featured businesses yet. Mark some from the admin panel.</p>
             </div>
           )}
         </div>
       </section>
 
-      {/* ── HOW IT WORKS ────────────────────────────────────────────────── */}
+      {/* ── HOW IT WORKS ──────────────────────────────────────────────────── */}
       <section
         className="py-24 relative"
-        style={{ background: 'linear-gradient(150deg, #F2FAF8 0%, #FFF9F6 100%)' }}
+        style={{ background: 'linear-gradient(150deg, #EEF2FF 0%, #F5F5FF 100%)' }}
       >
-        <div
-          className="absolute top-0 left-0 right-0 h-px"
-          style={{ background: 'linear-gradient(90deg, transparent, rgba(29,155,138,0.22), transparent)' }}
-        />
-        <FloralAccent className="absolute right-8 top-8 w-32 h-32 text-teal-500 opacity-10" />
+        <div className="absolute top-0 left-0 right-0 h-px"
+          style={{ background: 'linear-gradient(90deg, transparent, rgba(67,56,202,0.22), transparent)' }} />
+        <FloralAccent className="absolute right-8 top-8 w-32 h-32 text-indigo-400 opacity-10" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -833,16 +786,16 @@ export default function HomePage() {
             className="text-center mb-16"
           >
             <h2
-              className="text-3xl sm:text-4xl font-extrabold text-stone-900"
-              style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+              className="text-3xl sm:text-4xl font-extrabold"
+              style={{ fontFamily: "'Playfair Display', Georgia, serif", color: '#1E1B4B' }}
             >
               How It Works
             </h2>
-            <p className="mt-3 text-stone-500">Simple steps to connect with local businesses</p>
+            <p className="mt-3" style={{ color: '#6B7280' }}>Simple steps to connect with local businesses</p>
             <div className="flex items-center justify-center gap-3 mt-5">
-              <div className="h-px w-12 bg-gradient-to-r from-transparent to-teal-300" />
-              <div className="w-1.5 h-1.5 rounded-full bg-teal-400" />
-              <div className="h-px w-12 bg-gradient-to-l from-transparent to-teal-300" />
+              <div className="h-px w-12 bg-gradient-to-r from-transparent to-indigo-300" />
+              <div className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
+              <div className="h-px w-12 bg-gradient-to-l from-transparent to-indigo-300" />
             </div>
           </motion.div>
 
@@ -852,21 +805,21 @@ export default function HomePage() {
                 icon: FolderOpen,
                 title: 'Browse Categories',
                 desc: 'Explore our organized categories to find the services and products you need.',
-                gradient: 'linear-gradient(135deg, #E05D4B, #FFB5A8)',
+                gradient: 'linear-gradient(135deg, #4338CA, #818CF8)',
                 num: '01',
               },
               {
                 icon: Users,
                 title: 'Discover Businesses',
                 desc: 'View detailed profiles, services, photos and contact information.',
-                gradient: 'linear-gradient(135deg, #1D9B8A, #5DCFC1)',
+                gradient: 'linear-gradient(135deg, #F59E0B, #FCD34D)',
                 num: '02',
               },
               {
                 icon: TrendingUp,
                 title: 'Connect & Support',
                 desc: 'Reach out directly and support women entrepreneurs in your community.',
-                gradient: 'linear-gradient(135deg, #F59E0B, #F97316)',
+                gradient: 'linear-gradient(135deg, #3730A3, #F59E0B)',
                 num: '03',
               },
             ].map((step, i) => (
@@ -877,12 +830,10 @@ export default function HomePage() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.12 }}
                 whileHover={{ y: -8, scale: 1.02 }}
-                className="relative text-center p-8 rounded-3xl cursor-default"
+                className="relative text-center p-8 rounded-3xl cursor-default bg-white"
                 style={{
-                  background: 'rgba(255,255,255,0.85)',
-                  backdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(255,255,255,0.7)',
-                  boxShadow: '0 8px 40px rgba(0,0,0,0.07)',
+                  border: '1px solid rgba(67,56,202,0.10)',
+                  boxShadow: '0 8px 40px rgba(67,56,202,0.07)',
                 }}
               >
                 <motion.div
@@ -893,19 +844,19 @@ export default function HomePage() {
                 >
                   <step.icon className="w-8 h-8 text-white" />
                 </motion.div>
-                <div className="absolute top-5 right-6 text-5xl font-black text-stone-100"
-                  style={{ fontFamily: "'Playfair Display', serif" }}>
+                <div className="absolute top-5 right-6 text-5xl font-black"
+                  style={{ color: '#EEF2FF', fontFamily: "'Playfair Display', serif" }}>
                   {step.num}
                 </div>
-                <h3 className="text-xl font-bold text-stone-900 mb-3">{step.title}</h3>
-                <p className="text-stone-500 leading-relaxed">{step.desc}</p>
+                <h3 className="text-xl font-bold mb-3" style={{ color: '#1E1B4B' }}>{step.title}</h3>
+                <p className="leading-relaxed" style={{ color: '#6B7280' }}>{step.desc}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── CTA ─────────────────────────────────────────────────────────── */}
+      {/* ── CTA ───────────────────────────────────────────────────────────── */}
       <section className="py-24 relative bg-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -914,24 +865,22 @@ export default function HomePage() {
             viewport={{ once: true }}
             whileHover={{ scale: 1.01 }}
             className="relative rounded-3xl p-10 sm:p-16 text-center overflow-hidden cursor-default"
-            style={{ background: 'linear-gradient(135deg, #E05D4B 0%, #C2410C 50%, #1D9B8A 100%)' }}
+            style={{ background: 'linear-gradient(135deg, #3730A3 0%, #4338CA 50%, #F59E0B 100%)' }}
           >
-            <div
-              className="absolute top-0 right-0 w-72 h-72 rounded-full blur-3xl"
-              style={{ background: 'rgba(255,255,255,0.10)', transform: 'translate(50%, -50%)' }}
-            />
-            <div
-              className="absolute bottom-0 left-0 w-56 h-56 rounded-full blur-3xl"
-              style={{ background: 'rgba(255,255,255,0.10)', transform: 'translate(-50%, 50%)' }}
-            />
-            <div
-              className="absolute inset-0 opacity-[0.04]"
-              style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '32px 32px' }}
-            />
+            <div className="absolute top-0 right-0 w-72 h-72 rounded-full blur-3xl"
+              style={{ background: 'rgba(255,255,255,0.10)', transform: 'translate(50%, -50%)' }} />
+            <div className="absolute bottom-0 left-0 w-56 h-56 rounded-full blur-3xl"
+              style={{ background: 'rgba(255,255,255,0.10)', transform: 'translate(-50%, 50%)' }} />
+            <div className="absolute inset-0 opacity-[0.04]"
+              style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
             <FloralAccent className="absolute right-8 top-8 w-32 h-32 text-white opacity-10" />
 
             <div className="relative">
-              <motion.div animate={{ rotate: [0, 10, -10, 0] }} transition={{ duration: 3, repeat: Infinity }} className="text-5xl mb-6">
+              <motion.div
+                animate={{ rotate: [0, 10, -10, 0] }}
+                transition={{ duration: 3, repeat: Infinity }}
+                className="text-5xl mb-6"
+              >
                 🤝
               </motion.div>
               <h2
@@ -949,7 +898,7 @@ export default function HomePage() {
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.97 }}
                     className="px-8 py-4 bg-white font-extrabold rounded-2xl shadow-2xl transition-all text-lg"
-                    style={{ color: '#E05D4B' }}
+                    style={{ color: '#4338CA' }}
                   >
                     Explore Categories →
                   </motion.button>
