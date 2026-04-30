@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin, Search, Users, ChevronRight } from 'lucide-react';
 import type { Beneficiary } from '../types';
 
-// ✅ FIXED: Correct 38 official Tamil Nadu districts — consistent spelling everywhere
 const TN_DISTRICTS = [
   'Ariyalur','Chengalpattu','Chennai','Coimbatore','Cuddalore',
   'Dharmapuri','Dindigul','Erode','Kallakurichi','Kanchipuram',
@@ -17,7 +16,6 @@ const TN_DISTRICTS = [
   'Vellore','Viluppuram','Virudhunagar'
 ];
 
-// Maps district name → illustration file path
 const getDistrictImage = (district: string) =>
   `/illustrations/districts/${district.toLowerCase()}.png`;
 
@@ -80,6 +78,7 @@ export default function DistrictPage() {
             {filteredDistricts.map((district, i) => {
               const count = getCount(district);
               const isSelected = selectedDistrict === district;
+              // KEY LOGIC: only show in color if this district has beneficiaries
               const hasData = count > 0;
 
               return (
@@ -104,24 +103,24 @@ export default function DistrictPage() {
                     <img
                       src={getDistrictImage(district)}
                       alt={district}
-                      className={`w-full h-full object-cover transition-all duration-500 ${
-                        // ✅ FIXED: grayscale when no beneficiaries, color when has data
-                        hasData
-                          ? 'grayscale-0 opacity-100'
-                          : 'grayscale opacity-50'
-                      }`}
+                      className="w-full h-full object-cover transition-all duration-500"
+                      style={{
+                        // Color = has beneficiaries in this district
+                        // Grayscale = no beneficiaries yet
+                        filter: hasData ? 'grayscale(0%) brightness(1)' : 'grayscale(100%) brightness(0.85)',
+                        opacity: hasData ? 1 : 0.55,
+                      }}
                       onError={(e) => {
-                        // Hide broken images gracefully — show placeholder bg instead
                         (e.target as HTMLImageElement).style.display = 'none';
                       }}
                     />
 
-                    {/* Selected teal overlay */}
+                    {/* Teal overlay when selected */}
                     {isSelected && (
                       <div className="absolute inset-0 bg-[#0F766E]/15 pointer-events-none" />
                     )}
 
-                    {/* ✅ Count badge — shows number of beneficiaries */}
+                    {/* Count badge */}
                     <span className={`absolute top-2 right-2 text-xs font-bold px-2 py-0.5 rounded-full ${
                       isSelected
                         ? 'bg-[#0F766E] text-white'
@@ -133,8 +132,8 @@ export default function DistrictPage() {
                     </span>
                   </div>
 
-                  {/* District name bar — ✅ BLACK when no data, TEAL when has data */}
-                  <div className={`px-2 py-2 ${
+                  {/* District name bar */}
+                  <div className={`px-2 py-2 transition-colors ${
                     isSelected
                       ? 'bg-[#0F766E] text-white'
                       : hasData
@@ -174,6 +173,9 @@ export default function DistrictPage() {
                 <p className="text-stone-400 text-sm max-w-xs">
                   Choose a district from the left to see women entrepreneurs in that area
                 </p>
+                <p className="text-stone-300 text-xs mt-3">
+                  Districts shown in colour have registered businesses
+                </p>
               </motion.div>
             ) : loading ? (
               <div className="flex justify-center py-20">
@@ -188,7 +190,8 @@ export default function DistrictPage() {
                 className="flex flex-col items-center justify-center py-20 text-center"
               >
                 <Users className="w-12 h-12 text-stone-300 mb-4" />
-                <p className="text-stone-400">No beneficiaries found in {selectedDistrict}</p>
+                <p className="text-stone-500 font-medium">No beneficiaries in {selectedDistrict} yet</p>
+                <p className="text-stone-400 text-sm mt-1">Check back soon as more entrepreneurs join</p>
               </motion.div>
             ) : (
               <motion.div
@@ -197,7 +200,7 @@ export default function DistrictPage() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
               >
-                {/* Selected district header with illustration */}
+                {/* Selected district header */}
                 <div className="flex items-center gap-4 mb-6 p-4 bg-white/80 rounded-2xl border border-[#0F766E]/15 shadow-sm">
                   <img
                     src={getDistrictImage(selectedDistrict)}

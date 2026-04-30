@@ -8,7 +8,7 @@ import { useApp } from '../context/AppContext';
 import { Button } from '../components/ui/Button';
 import { BeneficiaryCard } from '../components/beneficiary/BeneficiaryCard';
 import { CategoryCard } from '../components/category/CategoryCard';
-import { useRef, useState, useCallback } from 'react';
+import { useRef, useState, useCallback, useEffect } from 'react';
 
 // ─── FEATURED DISTRICTS ───────────────────────────────────────────────────────
 const FEATURED_DISTRICTS = [
@@ -75,7 +75,7 @@ function NetflixCarousel<T>({
 }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
+  const [canScrollRight, setCanScrollRight] = useState(false);
   const scrollStep = (cardWidth + gap) * 3;
 
   const updateScrollState = useCallback(() => {
@@ -84,6 +84,21 @@ function NetflixCarousel<T>({
     setCanScrollLeft(el.scrollLeft > 8);
     setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 8);
   }, []);
+
+  // ✅ FIX: Run on mount so the right arrow appears immediately if content overflows
+  useEffect(() => {
+    // Small timeout to let the DOM fully render widths
+    const timer = setTimeout(() => {
+      updateScrollState();
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [updateScrollState, items]);
+
+  // Also update on window resize
+  useEffect(() => {
+    window.addEventListener('resize', updateScrollState);
+    return () => window.removeEventListener('resize', updateScrollState);
+  }, [updateScrollState]);
 
   const scroll = (dir: 'left' | 'right') => {
     const el = trackRef.current;
@@ -220,7 +235,6 @@ export default function HomePage() {
     (a.name || '').localeCompare(b.name || '')
   );
 
-  // Only featured/marked beneficiaries
   const allBeneficiaries = beneficiaries.filter(b => b.featured === true);
 
   const heroRef = useRef(null);
@@ -242,7 +256,7 @@ export default function HomePage() {
         className="relative min-h-[95vh] flex items-center justify-center overflow-hidden"
         style={{ background: 'linear-gradient(150deg, #F5F5FF 0%, #EEF2FF 30%, #F5F5FF 60%, #FFFBEB 100%)' }}
       >
-        {/* Ambient blobs — Indigo + Saffron */}
+        {/* Ambient blobs */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <motion.div
             style={{ y: blobY1, background: 'radial-gradient(circle, rgba(67,56,202,0.15) 0%, rgba(99,102,241,0.08) 60%, transparent 100%)' }}
@@ -262,7 +276,6 @@ export default function HomePage() {
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full blur-3xl"
             style={{ background: 'radial-gradient(circle, rgba(67,56,202,0.12) 0%, transparent 70%)' }}
           />
-          {/* Dot grid */}
           <div
             className="absolute inset-0 opacity-[0.03]"
             style={{ backgroundImage: 'radial-gradient(circle, #4338CA 1px, transparent 1px)', backgroundSize: '44px 44px' }}
@@ -275,7 +288,7 @@ export default function HomePage() {
           style={{ y: heroY, opacity: heroOpacity, scale: heroScale }}
           className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center"
         >
-          {/* Logo */}
+          {/* ✅ Logo with enhanced standalone glow */}
           <motion.div
             initial={{ opacity: 0, scale: 0.82 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -283,14 +296,38 @@ export default function HomePage() {
             className="flex flex-col items-center mb-8"
           >
             <div className="relative mb-5">
+              {/* Outer soft glow — large radius, warm indigo+saffron */}
               <div
-                className="absolute inset-0 -m-8 rounded-full blur-2xl opacity-40"
-                style={{ background: 'radial-gradient(circle, rgba(67,56,202,0.30) 0%, rgba(245,158,11,0.15) 60%, transparent 100%)' }}
+                className="absolute inset-0 -m-14 rounded-full blur-3xl"
+                style={{
+                  background: 'radial-gradient(circle, rgba(67,56,202,0.40) 0%, rgba(245,158,11,0.22) 50%, transparent 100%)',
+                  opacity: 0.75,
+                }}
+              />
+              {/* Inner sharp glow — tighter, more vivid */}
+              <div
+                className="absolute inset-0 -m-5 rounded-full blur-xl"
+                style={{
+                  background: 'radial-gradient(circle, rgba(99,102,241,0.55) 0%, rgba(245,158,11,0.15) 70%, transparent 100%)',
+                  opacity: 0.60,
+                }}
+              />
+              {/* Pulsing animated ring */}
+              <motion.div
+                animate={{ scale: [1, 1.12, 1], opacity: [0.25, 0.45, 0.25] }}
+                transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                className="absolute inset-0 -m-6 rounded-full blur-2xl"
+                style={{
+                  background: 'radial-gradient(circle, rgba(79,70,229,0.45) 0%, transparent 70%)',
+                }}
               />
               <img
                 src="/logo.png"
                 alt="Hand in Hand India"
-                className="relative h-32 sm:h-44 lg:h-56 w-auto object-contain drop-shadow-2xl"
+                className="relative h-32 sm:h-44 lg:h-56 w-auto object-contain"
+                style={{
+                  filter: 'drop-shadow(0 0 28px rgba(99,102,241,0.40)) drop-shadow(0 0 10px rgba(245,158,11,0.25)) drop-shadow(0 4px 32px rgba(67,56,202,0.20))',
+                }}
                 onError={(e) => {
                   e.currentTarget.style.display = 'none';
                   const fallback = document.getElementById('hero-logo-fallback');
@@ -551,16 +588,24 @@ export default function HomePage() {
           style={{ background: 'linear-gradient(90deg, transparent, rgba(245,158,11,0.30), transparent)' }} />
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
           {isLoading ? (
-            <div className="flex gap-4 overflow-hidden pb-4">
-              {[1,2,3,4,5].map(i => (
-                <div key={i} className="flex-shrink-0 w-44 h-56 rounded-2xl animate-pulse"
-                  style={{ background: '#EEF2FF' }} />
-              ))}
+            // ✅ Loading skeleton — shows while categories fetch
+            <div>
+              <div className="mb-8">
+                <div className="h-4 w-36 rounded-full animate-pulse mb-3" style={{ background: '#EEF2FF' }} />
+                <div className="h-10 w-64 rounded-xl animate-pulse" style={{ background: '#EEF2FF' }} />
+              </div>
+              <div className="flex gap-4 overflow-hidden pb-4">
+                {[1,2,3,4,5].map(i => (
+                  <div key={i} className="flex-shrink-0 w-52 rounded-2xl animate-pulse"
+                    style={{ height: '300px', background: '#EEF2FF' }} />
+                ))}
+              </div>
             </div>
           ) : rootCategories.length > 0 ? (
+            // ✅ Category carousel — shows all root categories
             <NetflixCarousel
-              items={rootCategories.slice(0, 12)}
-              cardWidth={200}
+              items={rootCategories}
+              cardWidth={210}
               gap={16}
               title="Browse by Category"
               subtitle="Find What You Need"
@@ -580,6 +625,7 @@ export default function HomePage() {
               )}
             />
           ) : (
+            // ✅ Empty state — only when truly no categories exist
             <div className="text-center py-16 rounded-2xl border"
               style={{ background: '#F5F5FF', borderColor: 'rgba(67,56,202,0.10)' }}>
               <FolderOpen className="w-12 h-12 mx-auto mb-4" style={{ color: '#C7D2FE' }} />
@@ -804,7 +850,7 @@ export default function HomePage() {
               {
                 icon: FolderOpen,
                 title: 'Browse Categories',
-                desc: 'Explore our organized categories to find the services and products you need.',
+                desc: 'Explore our organised categories to find the services and products you need.',
                 gradient: 'linear-gradient(135deg, #4338CA, #818CF8)',
                 num: '01',
               },
