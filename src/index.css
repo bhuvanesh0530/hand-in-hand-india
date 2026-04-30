@@ -2,39 +2,41 @@
 @import "tailwindcss";
 
 :root {
-  /* ── Brand tokens — Deep Indigo + Saffron ── */
-  --indigo: #4338CA;
-  --indigo-dark: #3730A3;
-  --indigo-deeper: #1E1B4B;
-  --indigo-light: #EEF2FF;
-  --indigo-mid: #C7D2FE;
-
-  --saffron: #F59E0B;
-  --saffron-dark: #D97706;
-  --saffron-light: #FEF3C7;
-  --saffron-mid: #FDE68A;
+  /* ── Brand tokens (richer, warmer, more premium) ── */
+  --coral: #C2410C;
+  --coral-dark: #9a3412;
+  --coral-light: #FFEDD5;
+  --teal: #0F766E;
+  --teal-dark: #0d5f58;
+  --teal-light: #CCFBF1;
+  --gold: #D97706;
+  --gold-light: #FEF3C7;
 
   /* ── Page surfaces ── */
-  --bg: #F5F5FF;
-  --bg-section: #EEEEFF;
+  --bg: #FDF6F0;
+  --bg-section: #FAF0E8;
   --surface: #FFFFFF;
-  --surface-warm: #F9F9FF;
+  --surface-warm: #FFF8F4;
 
   /* ── Typography ── */
-  --ink: #1E1B4B;
-  --ink-soft: #3730A3;
-  --muted: #6B7280;
-  --border: rgba(67, 56, 202, 0.12);
+  --ink: #1C1917;
+  --ink-soft: #44403C;
+  --muted: #A8A29E;
+  --border: rgba(194, 65, 12, 0.12);
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+}
 
 body {
   font-family: 'Nunito', sans-serif;
   background: var(--bg);
-  color: #374151;
+  color: var(--ink-soft);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -46,68 +48,94 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 ::selection {
-  background: rgba(67, 56, 202, 0.15);
+  background: rgba(194, 65, 12, 0.15);
   color: var(--ink);
 }
 
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, var(--indigo), var(--saffron));
+  background: linear-gradient(135deg, var(--coral), var(--teal));
   border-radius: 3px;
 }
 
+/* Glass card — warm tinted */
 .glass {
-  background: rgba(238, 242, 255, 0.80);
+  background: rgba(255, 248, 244, 0.80);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(67, 56, 202, 0.10);
+  border: 1px solid rgba(194, 65, 12, 0.10);
 }
 
+/* 3D card hover */
 .card-3d {
   transform-style: preserve-3d;
   transition: transform 0.4s ease, box-shadow 0.4s ease;
 }
+
 .card-3d:hover {
   transform: translateY(-8px) rotateX(2deg) rotateY(-2deg);
   box-shadow:
-    0 20px 60px rgba(67, 56, 202, 0.12),
-    0 8px 25px rgba(245, 158, 11, 0.10),
-    0 2px 8px rgba(0,0,0,0.06);
+    0 20px 60px rgba(194, 65, 12, 0.12),
+    0 8px 25px rgba(15, 118, 110, 0.10),
+    0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
+/* Gradient text — teal to terracotta */
 .gradient-text {
-  background: linear-gradient(135deg, var(--indigo), var(--saffron));
+  background: linear-gradient(135deg, var(--teal), var(--coral));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
+/* Warm section divider */
 .section-warm {
   background: linear-gradient(180deg, var(--bg) 0%, var(--bg-section) 50%, var(--bg) 100%);
 }
 
+/* Animations */
 @keyframes shimmer {
   0% { background-position: -200% center; }
   100% { background-position: 200% center; }
 }
+
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-12px); }
 }
+
 @keyframes pulseGlow {
-  0%, 100% { box-shadow: 0 0 20px rgba(67, 56, 202, 0.25); }
-  50% { box-shadow: 0 0 40px rgba(67, 56, 202, 0.45); }
+  0%, 100% { box-shadow: 0 0 20px rgba(194, 65, 12, 0.25); }
+  50% { box-shadow: 0 0 40px rgba(194, 65, 12, 0.45); }
 }
+
 @keyframes fadeSlideUp {
   from { opacity: 0; transform: translateY(24px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-.float-animation { animation: float 4s ease-in-out infinite; }
-.pulse-glow { animation: pulseGlow 2s ease-in-out infinite; }
+.float-animation {
+  animation: float 4s ease-in-out infinite;
+}
 
-.page-enter { opacity: 0; transform: translateY(20px); }
+.pulse-glow {
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+/* Page transitions (used by AnimatePresence in App.tsx) */
+.page-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
 .page-enter-active {
   opacity: 1;
   transform: translateY(0);
