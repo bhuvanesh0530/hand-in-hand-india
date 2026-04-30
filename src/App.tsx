@@ -7,6 +7,7 @@ import CategoriesPage from './pages/CategoriesPage';
 import BeneficiaryPage from './pages/BeneficiaryPage';
 import BeneficiaryProfile from './pages/BeneficiaryProfile';
 import DistrictPage from './pages/DistrictPage';
+import BusinessesPage from './pages/BusinessesPage';
 import AdminLogin from './pages/admin/AdminLogin';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminCategories from './pages/admin/AdminCategories';
@@ -32,14 +33,15 @@ function AnimatedRoutes() {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        {/* Public pages — wrapped with page transition */}
+        {/* Public pages */}
         <Route path="/" element={<Layout><PageWrapper><HomePage /></PageWrapper></Layout>} />
         <Route path="/categories" element={<Layout><PageWrapper><CategoriesPage /></PageWrapper></Layout>} />
         <Route path="/categories/:categoryId" element={<Layout><PageWrapper><BeneficiaryPage /></PageWrapper></Layout>} />
         <Route path="/beneficiary/:id" element={<Layout><PageWrapper><BeneficiaryProfile /></PageWrapper></Layout>} />
         <Route path="/districts" element={<Layout><PageWrapper><DistrictPage /></PageWrapper></Layout>} />
+        <Route path="/businesses" element={<Layout><PageWrapper><BusinessesPage /></PageWrapper></Layout>} />
 
-        {/* Admin pages — instant switch, no animation */}
+        {/* Admin pages */}
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/categories" element={<AdminCategories />} />
