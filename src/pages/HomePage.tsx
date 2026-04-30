@@ -9,7 +9,6 @@ import { Button } from '../components/ui/Button';
 import { BeneficiaryCard } from '../components/beneficiary/BeneficiaryCard';
 import { useRef, useState, useCallback, useEffect } from 'react';
 
-// ─── FEATURED DISTRICTS ───────────────────────────────────────────────────────
 const FEATURED_DISTRICTS = [
   'Ariyalur', 'Chengalpattu', 'Chennai', 'Coimbatore', 'Cuddalore',
   'Dharmapuri', 'Dindigul', 'Erode', 'Kallakurichi', 'Kanchipuram',
@@ -24,7 +23,6 @@ const FEATURED_DISTRICTS = [
 const getDistrictImage = (district: string) =>
   `/illustrations/districts/${district.toLowerCase()}.png`;
 
-// ─── HARDCODED SECTORS ────────────────────────────────────────────────────────
 const HOME_SECTORS = [
   {
     id: 'agriculture',
@@ -70,7 +68,6 @@ const HOME_SECTORS = [
   },
 ];
 
-// ─── QUOTES ───────────────────────────────────────────────────────────────────
 const quotes = [
   {
     text: "Empowering women entrepreneurs through one unified platform — that's the spirit of Hand in Hand India.",
@@ -101,7 +98,6 @@ const quotes = [
   },
 ];
 
-// ─── NETFLIX CAROUSEL ─────────────────────────────────────────────────────────
 function NetflixCarousel<T>({
   items, renderItem, cardWidth = 180, gap = 16,
   title, subtitle, icon: Icon, viewAllTo, viewAllLabel,
@@ -223,8 +219,6 @@ function NetflixCarousel<T>({
               {renderItem(item, i)}
             </div>
           ))}
-
-          {/* View-all card */}
           <div className="flex-shrink-0 snap-start" style={{ width: `${cardWidth}px` }}>
             <Link to={viewAllTo}>
               <motion.div
@@ -252,7 +246,6 @@ function NetflixCarousel<T>({
   );
 }
 
-// ─── DECORATIVE FLORAL SVG ────────────────────────────────────────────────────
 function FloralAccent({ className = '' }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -267,9 +260,8 @@ function FloralAccent({ className = '' }: { className?: string }) {
   );
 }
 
-// ─── MAIN HOME PAGE ───────────────────────────────────────────────────────────
 export default function HomePage() {
-  const { beneficiaries, isLoading } = useApp();
+  const { beneficiaries } = useApp();
 
   const allBeneficiaries = beneficiaries.filter(b => b.featured === true);
 
@@ -286,13 +278,12 @@ export default function HomePage() {
   return (
     <div className="relative overflow-x-hidden" style={{ fontFamily: "'Nunito', 'Helvetica Neue', sans-serif" }}>
 
-      {/* ── HERO ──────────────────────────────────────────────────────────── */}
+      {/* ── HERO ── */}
       <section
         ref={heroRef}
         className="relative min-h-[95vh] flex items-center justify-center overflow-hidden"
         style={{ background: 'linear-gradient(150deg, #F5F5FF 0%, #EEF2FF 30%, #F5F5FF 60%, #FFFBEB 100%)' }}
       >
-        {/* Ambient blobs */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <motion.div
             style={{ y: blobY1, background: 'radial-gradient(circle, rgba(67,56,202,0.15) 0%, rgba(99,102,241,0.08) 60%, transparent 100%)' }}
@@ -537,7 +528,7 @@ export default function HomePage() {
         </motion.div>
       </section>
 
-      {/* ── BROWSE BY DISTRICT ───────────────────────────────────────────── */}
+      {/* ── BROWSE BY DISTRICT ── */}
       <section
         className="py-24 relative"
         style={{ background: 'linear-gradient(180deg, #F5F5FF 0%, #EEF2FF 100%)' }}
@@ -546,7 +537,6 @@ export default function HomePage() {
           style={{ background: 'linear-gradient(90deg, transparent, rgba(67,56,202,0.25), transparent)' }} />
         <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-32 rounded-r-full opacity-40"
           style={{ background: 'linear-gradient(180deg, #4338CA, #F59E0B)' }} />
-
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
           <NetflixCarousel
             items={FEATURED_DISTRICTS}
@@ -558,78 +548,63 @@ export default function HomePage() {
             viewAllTo="/districts"
             viewAllLabel="All 38 Districts"
             accentColor="#3730A3"
-            renderItem={(district, i) => {
-              const count = beneficiaries.filter(b => b.district === district).length;
-              const hasData = count > 0;
-              return (
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.04 }}
-                  whileHover={{ y: -8, scale: 1.04 }}
-                  whileTap={{ scale: 0.97 }}
-                >
-                  <Link to="/districts">
-                    <div
-                      className={`rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer group ${
-                        hasData ? 'opacity-100' : 'opacity-60 grayscale'
-                      }`}
-                      style={{
-                        border: '1px solid rgba(67,56,202,0.12)',
-                        background: 'white',
-                        boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
-                      }}
-                    >
-                      <div className="relative w-full aspect-square overflow-hidden"
-                        style={{ background: hasData ? '#EEF2FF' : '#F3F4F6' }}>
-                        <img
-                          src={getDistrictImage(district)}
-                          alt={district}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                          style={{ filter: hasData ? 'none' : 'grayscale(100%) brightness(0.9)' }}
-                          onError={(e) => {
-                            const parent = (e.target as HTMLImageElement).parentElement;
-                            if (parent) {
-                              (e.target as HTMLImageElement).style.display = 'none';
-                              parent.style.background = hasData
-                                ? 'linear-gradient(135deg, #EEF2FF, #FEF3C7)'
-                                : '#E5E7EB';
-                            }
-                          }}
-                        />
-                        <div
-                          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                          style={{ background: 'linear-gradient(to top, rgba(55,48,163,0.35), transparent)' }}
-                        />
-                        {/* Count badge */}
-                        {hasData && (
-                          <span className="absolute top-2 right-2 text-xs font-bold px-2 py-0.5 rounded-full bg-white/90 text-indigo-700 shadow-sm">
-                            {count}
-                          </span>
-                        )}
-                      </div>
+            renderItem={(district, i) => (
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.04 }}
+                whileHover={{ y: -8, scale: 1.04 }}
+                whileTap={{ scale: 0.97 }}
+              >
+                <Link to="/districts">
+                  <div
+                    className="rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer group"
+                    style={{
+                      border: '1px solid rgba(67,56,202,0.12)',
+                      background: 'white',
+                      boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
+                    }}
+                  >
+                    <div className="relative w-full aspect-square overflow-hidden"
+                      style={{ background: '#EEF2FF' }}>
+                      <img
+                        src={getDistrictImage(district)}
+                        alt={district}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        onError={(e) => {
+                          const parent = (e.target as HTMLImageElement).parentElement;
+                          if (parent) {
+                            (e.target as HTMLImageElement).style.display = 'none';
+                            parent.style.background = 'linear-gradient(135deg, #EEF2FF, #FEF3C7)';
+                          }
+                        }}
+                      />
                       <div
-                        className="px-3 py-2.5 transition-colors group-hover:bg-indigo-50"
-                        style={{ background: 'white' }}
-                      >
-                        <div className="flex items-center gap-1.5">
-                          <MapPin className="w-3 h-3 flex-shrink-0" style={{ color: hasData ? '#4338CA' : '#9CA3AF' }} />
-                          <span className="text-xs font-bold truncate" style={{ color: hasData ? '#1E1B4B' : '#9CA3AF' }}>
-                            {district}
-                          </span>
-                        </div>
+                        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        style={{ background: 'linear-gradient(to top, rgba(55,48,163,0.35), transparent)' }}
+                      />
+                    </div>
+                    <div
+                      className="px-3 py-2.5 transition-colors group-hover:bg-indigo-50"
+                      style={{ background: 'white' }}
+                    >
+                      <div className="flex items-center gap-1.5">
+                        <MapPin className="w-3 h-3 flex-shrink-0" style={{ color: '#4338CA' }} />
+                        <span className="text-xs font-bold truncate" style={{ color: '#1E1B4B' }}>
+                          {district}
+                        </span>
                       </div>
                     </div>
-                  </Link>
-                </motion.div>
-              );
-            }}
+                  </div>
+                </Link>
+              </motion.div>
+            )}
           />
         </div>
       </section>
 
-      {/* ── BROWSE BY CATEGORY ─────────────────────────────────────────────── */}
+      {/* ── BROWSE BY CATEGORY ── */}
       <section className="py-24 relative bg-white">
         <div className="absolute top-0 left-0 right-0 h-px"
           style={{ background: 'linear-gradient(90deg, transparent, rgba(245,158,11,0.30), transparent)' }} />
@@ -644,92 +619,66 @@ export default function HomePage() {
             viewAllTo="/categories"
             viewAllLabel="All Categories"
             accentColor="#C2410C"
-            renderItem={(sector, i) => {
-              const count = beneficiaries.filter(
-                b => b.sector?.trim().toLowerCase() === sector.name.trim().toLowerCase()
-              ).length;
-              const hasData = count > 0;
-              return (
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.05 }}
-                  whileHover={{ y: -8, scale: 1.04 }}
-                  whileTap={{ scale: 0.97 }}
-                >
-                  <Link to={`/businesses?sector=${encodeURIComponent(sector.name)}`}>
+            renderItem={(sector, i) => (
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.05 }}
+                whileHover={{ y: -8, scale: 1.04 }}
+                whileTap={{ scale: 0.97 }}
+              >
+                <Link to={`/businesses?sector=${encodeURIComponent(sector.name)}`}>
+                  <div
+                    className="rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer group"
+                    style={{
+                      border: '1px solid rgba(194,65,12,0.12)',
+                      background: 'white',
+                      boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
+                    }}
+                  >
                     <div
-                      className={`rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer group ${
-                        hasData ? 'opacity-100' : 'opacity-60 grayscale'
-                      }`}
-                      style={{
-                        border: '1px solid rgba(194,65,12,0.12)',
-                        background: 'white',
-                        boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
-                      }}
+                      className="h-1.5 flex-shrink-0"
+                      style={{ background: sector.gradient }}
+                    />
+                    <div
+                      className="relative w-full overflow-hidden"
+                      style={{ height: '140px', background: '#FDF6F0' }}
                     >
-                      {/* Top gradient bar */}
-                      <div
-                        className="h-1.5 flex-shrink-0"
-                        style={{ background: hasData ? sector.gradient : '#E5E7EB' }}
+                      <img
+                        src={sector.image}
+                        alt={sector.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        onError={(e) => {
+                          const img = e.target as HTMLImageElement;
+                          img.style.display = 'none';
+                          const parent = img.parentElement;
+                          if (parent) parent.style.background = sector.fallbackBg;
+                        }}
                       />
-                      {/* Illustration */}
                       <div
-                        className="relative w-full overflow-hidden"
-                        style={{ height: '140px', background: hasData ? '#FDF6F0' : '#F3F4F6' }}
-                      >
-                        <img
-                          src={sector.image}
-                          alt={sector.name}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                          style={{ filter: hasData ? 'none' : 'grayscale(100%) brightness(0.9)' }}
-                          onError={(e) => {
-                            const img = e.target as HTMLImageElement;
-                            img.style.display = 'none';
-                            const parent = img.parentElement;
-                            if (parent) parent.style.background = hasData ? sector.fallbackBg : '#E5E7EB';
-                          }}
-                        />
-                        <div
-                          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                          style={{ background: 'linear-gradient(to top, rgba(194,65,12,0.25), transparent)' }}
-                        />
-                        {/* Count badge */}
-                        {hasData && (
-                          <span
-                            className="absolute top-2 right-2 text-xs font-bold px-2 py-0.5 rounded-full text-white shadow-md"
-                            style={{ background: sector.gradient }}
-                          >
-                            {count}
-                          </span>
-                        )}
-                      </div>
-                      {/* Name bar */}
-                      <div
-                        className="px-3 py-2.5 transition-colors group-hover:bg-orange-50"
-                        style={{ background: 'white' }}
-                      >
-                        <span
-                          className="text-xs font-bold truncate block"
-                          style={{ color: hasData ? '#1C1917' : '#9CA3AF' }}
-                        >
-                          {sector.name}
-                        </span>
-                        {hasData && (
-                          <span className="text-xs" style={{ color: '#C2410C' }}>Explore →</span>
-                        )}
-                      </div>
+                        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        style={{ background: 'linear-gradient(to top, rgba(194,65,12,0.25), transparent)' }}
+                      />
                     </div>
-                  </Link>
-                </motion.div>
-              );
-            }}
+                    <div
+                      className="px-3 py-2.5 transition-colors group-hover:bg-orange-50"
+                      style={{ background: 'white' }}
+                    >
+                      <span className="text-xs font-bold truncate block" style={{ color: '#1C1917' }}>
+                        {sector.name}
+                      </span>
+                      <span className="text-xs" style={{ color: '#C2410C' }}>Explore →</span>
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
+            )}
           />
         </div>
       </section>
 
-      {/* ── VOICES THAT INSPIRE ───────────────────────────────────────────── */}
+      {/* ── VOICES THAT INSPIRE ── */}
       <section
         className="py-28 relative overflow-hidden"
         style={{ background: 'linear-gradient(150deg, #F5F5FF 0%, #EEF2FF 40%, #FFFBEB 100%)' }}
@@ -849,7 +798,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── OUR BUSINESSES ────────────────────────────────────────────────── */}
+      {/* ── OUR BUSINESSES ── */}
       <section className="py-24 relative bg-white">
         <div className="absolute top-0 left-0 right-0 h-px"
           style={{ background: 'linear-gradient(90deg, transparent, rgba(245,158,11,0.35), transparent)' }} />
@@ -901,7 +850,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── HOW IT WORKS ──────────────────────────────────────────────────── */}
+      {/* ── HOW IT WORKS ── */}
       <section
         className="py-24 relative"
         style={{ background: 'linear-gradient(150deg, #EEF2FF 0%, #F5F5FF 100%)' }}
@@ -909,7 +858,6 @@ export default function HomePage() {
         <div className="absolute top-0 left-0 right-0 h-px"
           style={{ background: 'linear-gradient(90deg, transparent, rgba(67,56,202,0.22), transparent)' }} />
         <FloralAccent className="absolute right-8 top-8 w-32 h-32 text-indigo-400 opacity-10" />
-
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -988,7 +936,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── CTA ───────────────────────────────────────────────────────────── */}
+      {/* ── CTA ── */}
       <section className="py-24 relative bg-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -1006,7 +954,6 @@ export default function HomePage() {
             <div className="absolute inset-0 opacity-[0.04]"
               style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
             <FloralAccent className="absolute right-8 top-8 w-32 h-32 text-white opacity-10" />
-
             <div className="relative">
               <motion.div
                 animate={{ rotate: [0, 10, -10, 0] }}
@@ -1050,6 +997,7 @@ export default function HomePage() {
           </motion.div>
         </div>
       </section>
+
     </div>
   );
 }
