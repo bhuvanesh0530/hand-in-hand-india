@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { MapPin, ChevronRight, Folder } from 'lucide-react';
+import { MapPin, ChevronRight } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
 const SECTORS = [
@@ -58,7 +58,9 @@ export default function CategoriesPage() {
   const { beneficiaries } = useApp();
 
   const countBySector = (sectorName: string) =>
-    beneficiaries.filter(b => b.sector === sectorName).length;
+    beneficiaries.filter(
+      b => b.sector?.trim().toLowerCase() === sectorName.trim().toLowerCase()
+    ).length;
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-10">
@@ -97,6 +99,8 @@ export default function CategoriesPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {SECTORS.map((sector, index) => {
           const count = countBySector(sector.name);
+          const hasData = count > 0;
+
           return (
             <motion.div
               key={sector.id}
@@ -109,26 +113,45 @@ export default function CategoriesPage() {
                   whileHover={{ y: -8, scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-                  className="group relative bg-white/75 backdrop-blur-xl border border-white/60 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 flex flex-col"
+                  className={`group relative bg-white/75 backdrop-blur-xl border rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 flex flex-col h-full
+                    ${hasData
+                      ? 'border-white/60 opacity-100'
+                      : 'border-gray-200/60 opacity-70 grayscale'
+                    }`}
                 >
-                  {/* Top gradient bar */}
-                  <div className={`h-1.5 bg-gradient-to-r ${sector.gradient.from} ${sector.gradient.to} flex-shrink-0`} />
+                  {/* Top gradient bar — only show when has data */}
+                  {hasData && (
+                    <div className={`h-1.5 bg-gradient-to-r ${sector.gradient.from} ${sector.gradient.to} flex-shrink-0`} />
+                  )}
+                  {!hasData && (
+                    <div className="h-1.5 bg-gray-200 flex-shrink-0" />
+                  )}
 
-                  {/* Illustration — always exactly h-44 (176px), never collapses */}
+                  {/* Count badge */}
+                  {hasData && (
+                    <div className="absolute top-4 right-4 z-10">
+                      <span className={`text-xs font-bold px-2.5 py-1 rounded-full bg-gradient-to-r ${sector.gradient.from} ${sector.gradient.to} text-white shadow-md`}>
+                        {count}
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Illustration */}
                   <div
                     className="relative w-full flex-shrink-0 overflow-hidden flex items-center justify-center"
-                    style={{ height: '176px', background: '#FDF6F0' }}
+                    style={{ height: '176px', background: hasData ? '#FDF6F0' : '#F3F4F6' }}
                   >
                     <img
                       src={sector.image}
                       alt={sector.name}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-105
+                        ${!hasData ? 'grayscale brightness-90' : ''}`}
                       onError={e => {
                         const img = e.target as HTMLImageElement;
                         img.style.display = 'none';
                         const parent = img.parentElement;
                         if (parent) {
-                          parent.style.background = sector.fallbackBg;
+                          parent.style.background = hasData ? sector.fallbackBg : '#E5E7EB';
                         }
                       }}
                     />
@@ -137,28 +160,34 @@ export default function CategoriesPage() {
 
                   {/* Card body */}
                   <div className="p-5 flex flex-col flex-1">
-                    <h3 className="text-lg font-bold text-stone-900 group-hover:text-[#C2410C] transition-colors leading-tight mb-1">
+                    <h3 className={`text-lg font-bold leading-tight mb-1 transition-colors
+                      ${hasData
+                        ? 'text-stone-900 group-hover:text-[#C2410C]'
+                        : 'text-stone-400'
+                      }`}>
                       {sector.name}
                     </h3>
-                    <p className="text-sm text-stone-500 line-clamp-2 mb-3">
+                    <p className={`text-sm line-clamp-2 mb-3
+                      ${hasData ? 'text-stone-500' : 'text-stone-400'}`}>
                       {sector.description}
                     </p>
 
-                    {count > 0 && (
-                      <div className="flex items-center gap-1.5 text-stone-400 mb-3">
-                        <Folder className="w-3.5 h-3.5" />
-                        <span className="text-xs font-medium">{count} businesses</span>
+                    {hasData ? (
+                      <div className="flex items-center gap-1 text-[#C2410C] font-semibold text-sm group-hover:gap-2 transition-all mt-auto">
+                        <span>Explore</span>
+                        <ChevronRight className="w-4 h-4" />
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-1 text-stone-300 text-sm mt-auto">
+                        <span>No businesses yet</span>
                       </div>
                     )}
-
-                    <div className="flex items-center gap-1 text-[#C2410C] font-semibold text-sm group-hover:gap-2 transition-all mt-auto">
-                      <span>Explore</span>
-                      <ChevronRight className="w-4 h-4" />
-                    </div>
                   </div>
 
-                  {/* Hover overlay */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${sector.gradient.from} ${sector.gradient.to} opacity-0 group-hover:opacity-5 transition-opacity duration-300 pointer-events-none`} />
+                  {/* Hover overlay — only when has data */}
+                  {hasData && (
+                    <div className={`absolute inset-0 bg-gradient-to-br ${sector.gradient.from} ${sector.gradient.to} opacity-0 group-hover:opacity-5 transition-opacity duration-300 pointer-events-none`} />
+                  )}
                 </motion.div>
               </Link>
             </motion.div>

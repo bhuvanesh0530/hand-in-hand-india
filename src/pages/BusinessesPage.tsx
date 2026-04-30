@@ -36,8 +36,12 @@ export default function BusinessesPage() {
       b.business_name?.toLowerCase().includes(search.toLowerCase()) ||
       b.about?.toLowerCase().includes(search.toLowerCase()) ||
       b.district?.toLowerCase().includes(search.toLowerCase());
-    const matchDistrict = selectedDistrict ? b.district === selectedDistrict : true;
-    const matchSector = selectedSector ? b.sector === selectedSector : true;
+    const matchDistrict = selectedDistrict
+      ? b.district?.trim().toLowerCase() === selectedDistrict.trim().toLowerCase()
+      : true;
+    const matchSector = selectedSector
+      ? b.sector?.trim().toLowerCase() === selectedSector.trim().toLowerCase()
+      : true;
     return matchSearch && matchDistrict && matchSector;
   });
 

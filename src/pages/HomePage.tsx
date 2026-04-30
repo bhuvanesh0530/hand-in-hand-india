@@ -7,23 +7,68 @@ import {
 import { useApp } from '../context/AppContext';
 import { Button } from '../components/ui/Button';
 import { BeneficiaryCard } from '../components/beneficiary/BeneficiaryCard';
-import { CategoryCard } from '../components/category/CategoryCard';
 import { useRef, useState, useCallback, useEffect } from 'react';
 
 // ─── FEATURED DISTRICTS ───────────────────────────────────────────────────────
 const FEATURED_DISTRICTS = [
-  'Ariyalur', 'Chennai', 'Chengalpattu', 'Coimbatore', 'Cuddalore',
+  'Ariyalur', 'Chengalpattu', 'Chennai', 'Coimbatore', 'Cuddalore',
   'Dharmapuri', 'Dindigul', 'Erode', 'Kallakurichi', 'Kanchipuram',
-  'Kanyakumari', 'Karur', 'Krishnagiri', 'Madurai', 'Mayiladuthurai',
+  'Kanniyakumari', 'Karur', 'Krishnagiri', 'Madurai', 'Mayiladuthurai',
   'Nagapattinam', 'Namakkal', 'Nilgiris', 'Perambalur', 'Pudukkottai',
-  'Ramanathapuram', 'Ranipet', 'Salem', 'Sivaganga', 'Tenkasi',
-  'Thanjavur', 'Theni', 'Tiruchirappalli', 'Tirunelveli', 'Tirupathur',
-  'Tiruppur', 'Tiruvallur', 'Tiruvannamalai', 'Tiruvarur', 'Vellore',
-  'Viluppuram', 'Virudhunagar',
+  'Ramanathapuram', 'Ranipet', 'Salem', 'Sivagangai', 'Tenkasi',
+  'Thanjavur', 'Theni', 'Thoothukudi', 'Tiruchirappalli', 'Tirunelveli',
+  'Tirupathur', 'Tiruppur', 'Tiruvallur', 'Tiruvannamalai', 'Tiruvarur',
+  'Vellore', 'Viluppuram', 'Virudhunagar',
 ].sort((a, b) => a.localeCompare(b));
 
 const getDistrictImage = (district: string) =>
   `/illustrations/districts/${district.toLowerCase()}.png`;
+
+// ─── HARDCODED SECTORS ────────────────────────────────────────────────────────
+const HOME_SECTORS = [
+  {
+    id: 'agriculture',
+    name: 'Agriculture & Allied Activities',
+    image: '/illustrations/sectors/agri.png',
+    fallbackBg: 'linear-gradient(135deg, #FFEDD5, #FEF3C7)',
+    gradient: 'linear-gradient(135deg, #C2410C, #D97706)',
+  },
+  {
+    id: 'animal-husbandry',
+    name: 'Animal Husbandry',
+    image: '/illustrations/sectors/animal-husbandry.png',
+    fallbackBg: 'linear-gradient(135deg, #CCFBF1, #D1FAE5)',
+    gradient: 'linear-gradient(135deg, #0F766E, #0d9488)',
+  },
+  {
+    id: 'handloom',
+    name: 'Handloom & Handicrafts',
+    image: '/illustrations/sectors/handloom.png',
+    fallbackBg: 'linear-gradient(135deg, #FEF3C7, #FDE68A)',
+    gradient: 'linear-gradient(135deg, #D97706, #f59e0b)',
+  },
+  {
+    id: 'manufacturing',
+    name: 'Manufacturing / Production',
+    image: '/illustrations/sectors/manufacturing.png',
+    fallbackBg: 'linear-gradient(135deg, #FFEDD5, #CCFBF1)',
+    gradient: 'linear-gradient(135deg, #C2410C, #0F766E)',
+  },
+  {
+    id: 'service',
+    name: 'Service',
+    image: '/illustrations/sectors/service.png',
+    fallbackBg: 'linear-gradient(135deg, #CCFBF1, #FEF3C7)',
+    gradient: 'linear-gradient(135deg, #0F766E, #D97706)',
+  },
+  {
+    id: 'trade',
+    name: 'Trade',
+    image: '/illustrations/sectors/trade.png',
+    fallbackBg: 'linear-gradient(135deg, #FEF3C7, #FFEDD5)',
+    gradient: 'linear-gradient(135deg, #D97706, #C2410C)',
+  },
+];
 
 // ─── QUOTES ───────────────────────────────────────────────────────────────────
 const quotes = [
@@ -85,16 +130,11 @@ function NetflixCarousel<T>({
     setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 8);
   }, []);
 
-  // ✅ FIX: Run on mount so the right arrow appears immediately if content overflows
   useEffect(() => {
-    // Small timeout to let the DOM fully render widths
-    const timer = setTimeout(() => {
-      updateScrollState();
-    }, 100);
+    const timer = setTimeout(() => { updateScrollState(); }, 100);
     return () => clearTimeout(timer);
   }, [updateScrollState, items]);
 
-  // Also update on window resize
   useEffect(() => {
     window.addEventListener('resize', updateScrollState);
     return () => window.removeEventListener('resize', updateScrollState);
@@ -229,11 +269,7 @@ function FloralAccent({ className = '' }: { className?: string }) {
 
 // ─── MAIN HOME PAGE ───────────────────────────────────────────────────────────
 export default function HomePage() {
-  const { categories, beneficiaries, getChildCategories, isLoading } = useApp();
-
-  const rootCategories = getChildCategories(null).sort((a: any, b: any) =>
-    (a.name || '').localeCompare(b.name || '')
-  );
+  const { beneficiaries, isLoading } = useApp();
 
   const allBeneficiaries = beneficiaries.filter(b => b.featured === true);
 
@@ -288,7 +324,7 @@ export default function HomePage() {
           style={{ y: heroY, opacity: heroOpacity, scale: heroScale }}
           className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center"
         >
-          {/* ✅ Logo with enhanced standalone glow */}
+          {/* Logo with glow */}
           <motion.div
             initial={{ opacity: 0, scale: 0.82 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -296,7 +332,6 @@ export default function HomePage() {
             className="flex flex-col items-center mb-8"
           >
             <div className="relative mb-5">
-              {/* Outer soft glow — large radius, warm indigo+saffron */}
               <div
                 className="absolute inset-0 -m-14 rounded-full blur-3xl"
                 style={{
@@ -304,7 +339,6 @@ export default function HomePage() {
                   opacity: 0.75,
                 }}
               />
-              {/* Inner sharp glow — tighter, more vivid */}
               <div
                 className="absolute inset-0 -m-5 rounded-full blur-xl"
                 style={{
@@ -312,14 +346,11 @@ export default function HomePage() {
                   opacity: 0.60,
                 }}
               />
-              {/* Pulsing animated ring */}
               <motion.div
                 animate={{ scale: [1, 1.12, 1], opacity: [0.25, 0.45, 0.25] }}
                 transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
                 className="absolute inset-0 -m-6 rounded-full blur-2xl"
-                style={{
-                  background: 'radial-gradient(circle, rgba(79,70,229,0.45) 0%, transparent 70%)',
-                }}
+                style={{ background: 'radial-gradient(circle, rgba(79,70,229,0.45) 0%, transparent 70%)' }}
               />
               <img
                 src="/logo.png"
@@ -343,7 +374,6 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Tagline */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -455,8 +485,8 @@ export default function HomePage() {
             className="grid grid-cols-3 gap-5 max-w-md mx-auto"
           >
             {[
-              { value: `${allBeneficiaries.length}+`, label: 'Businesses' },
-              { value: `${categories.length}+`, label: 'Categories' },
+              { value: `${beneficiaries.length}+`, label: 'Businesses' },
+              { value: '6+', label: 'Categories' },
               { value: '100%', label: 'Women-Led' },
             ].map((stat, i) => (
               <motion.div
@@ -528,56 +558,73 @@ export default function HomePage() {
             viewAllTo="/districts"
             viewAllLabel="All 38 Districts"
             accentColor="#3730A3"
-            renderItem={(district, i) => (
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.04 }}
-                whileHover={{ y: -8, scale: 1.04 }}
-                whileTap={{ scale: 0.97 }}
-              >
-                <Link to="/districts">
-                  <div
-                    className="rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer group"
-                    style={{
-                      border: '1px solid rgba(67,56,202,0.12)',
-                      background: 'white',
-                      boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
-                    }}
-                  >
-                    <div className="relative w-full aspect-square overflow-hidden"
-                      style={{ background: '#EEF2FF' }}>
-                      <img
-                        src={getDistrictImage(district)}
-                        alt={district}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        onError={(e) => {
-                          const parent = (e.target as HTMLImageElement).parentElement;
-                          if (parent) {
-                            (e.target as HTMLImageElement).style.display = 'none';
-                            parent.style.background = 'linear-gradient(135deg, #EEF2FF, #FEF3C7)';
-                          }
-                        }}
-                      />
-                      <div
-                        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                        style={{ background: 'linear-gradient(to top, rgba(55,48,163,0.35), transparent)' }}
-                      />
-                    </div>
+            renderItem={(district, i) => {
+              const count = beneficiaries.filter(b => b.district === district).length;
+              const hasData = count > 0;
+              return (
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.04 }}
+                  whileHover={{ y: -8, scale: 1.04 }}
+                  whileTap={{ scale: 0.97 }}
+                >
+                  <Link to="/districts">
                     <div
-                      className="px-3 py-2.5 transition-colors group-hover:bg-indigo-50"
-                      style={{ background: 'white' }}
+                      className={`rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer group ${
+                        hasData ? 'opacity-100' : 'opacity-60 grayscale'
+                      }`}
+                      style={{
+                        border: '1px solid rgba(67,56,202,0.12)',
+                        background: 'white',
+                        boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
+                      }}
                     >
-                      <div className="flex items-center gap-1.5">
-                        <MapPin className="w-3 h-3 flex-shrink-0" style={{ color: '#4338CA' }} />
-                        <span className="text-xs font-bold truncate" style={{ color: '#1E1B4B' }}>{district}</span>
+                      <div className="relative w-full aspect-square overflow-hidden"
+                        style={{ background: hasData ? '#EEF2FF' : '#F3F4F6' }}>
+                        <img
+                          src={getDistrictImage(district)}
+                          alt={district}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          style={{ filter: hasData ? 'none' : 'grayscale(100%) brightness(0.9)' }}
+                          onError={(e) => {
+                            const parent = (e.target as HTMLImageElement).parentElement;
+                            if (parent) {
+                              (e.target as HTMLImageElement).style.display = 'none';
+                              parent.style.background = hasData
+                                ? 'linear-gradient(135deg, #EEF2FF, #FEF3C7)'
+                                : '#E5E7EB';
+                            }
+                          }}
+                        />
+                        <div
+                          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          style={{ background: 'linear-gradient(to top, rgba(55,48,163,0.35), transparent)' }}
+                        />
+                        {/* Count badge */}
+                        {hasData && (
+                          <span className="absolute top-2 right-2 text-xs font-bold px-2 py-0.5 rounded-full bg-white/90 text-indigo-700 shadow-sm">
+                            {count}
+                          </span>
+                        )}
+                      </div>
+                      <div
+                        className="px-3 py-2.5 transition-colors group-hover:bg-indigo-50"
+                        style={{ background: 'white' }}
+                      >
+                        <div className="flex items-center gap-1.5">
+                          <MapPin className="w-3 h-3 flex-shrink-0" style={{ color: hasData ? '#4338CA' : '#9CA3AF' }} />
+                          <span className="text-xs font-bold truncate" style={{ color: hasData ? '#1E1B4B' : '#9CA3AF' }}>
+                            {district}
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </Link>
-              </motion.div>
-            )}
+                  </Link>
+                </motion.div>
+              );
+            }}
           />
         </div>
       </section>
@@ -587,51 +634,98 @@ export default function HomePage() {
         <div className="absolute top-0 left-0 right-0 h-px"
           style={{ background: 'linear-gradient(90deg, transparent, rgba(245,158,11,0.30), transparent)' }} />
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
-          {isLoading ? (
-            // ✅ Loading skeleton — shows while categories fetch
-            <div>
-              <div className="mb-8">
-                <div className="h-4 w-36 rounded-full animate-pulse mb-3" style={{ background: '#EEF2FF' }} />
-                <div className="h-10 w-64 rounded-xl animate-pulse" style={{ background: '#EEF2FF' }} />
-              </div>
-              <div className="flex gap-4 overflow-hidden pb-4">
-                {[1,2,3,4,5].map(i => (
-                  <div key={i} className="flex-shrink-0 w-52 rounded-2xl animate-pulse"
-                    style={{ height: '300px', background: '#EEF2FF' }} />
-                ))}
-              </div>
-            </div>
-          ) : rootCategories.length > 0 ? (
-            // ✅ Category carousel — shows all root categories
-            <NetflixCarousel
-              items={rootCategories}
-              cardWidth={210}
-              gap={16}
-              title="Browse by Category"
-              subtitle="Find What You Need"
-              icon={FolderOpen}
-              viewAllTo="/categories"
-              viewAllLabel="All Categories"
-              accentColor="#4338CA"
-              renderItem={(cat, i) => (
+          <NetflixCarousel
+            items={HOME_SECTORS}
+            cardWidth={210}
+            gap={16}
+            title="Browse by Category"
+            subtitle="Find What You Need"
+            icon={FolderOpen}
+            viewAllTo="/categories"
+            viewAllLabel="All Categories"
+            accentColor="#C2410C"
+            renderItem={(sector, i) => {
+              const count = beneficiaries.filter(
+                b => b.sector?.trim().toLowerCase() === sector.name.trim().toLowerCase()
+              ).length;
+              const hasData = count > 0;
+              return (
                 <motion.div
                   initial={{ opacity: 0, x: 20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.05 }}
+                  whileHover={{ y: -8, scale: 1.04 }}
+                  whileTap={{ scale: 0.97 }}
                 >
-                  <CategoryCard category={cat} index={i} />
+                  <Link to={`/businesses?sector=${encodeURIComponent(sector.name)}`}>
+                    <div
+                      className={`rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer group ${
+                        hasData ? 'opacity-100' : 'opacity-60 grayscale'
+                      }`}
+                      style={{
+                        border: '1px solid rgba(194,65,12,0.12)',
+                        background: 'white',
+                        boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
+                      }}
+                    >
+                      {/* Top gradient bar */}
+                      <div
+                        className="h-1.5 flex-shrink-0"
+                        style={{ background: hasData ? sector.gradient : '#E5E7EB' }}
+                      />
+                      {/* Illustration */}
+                      <div
+                        className="relative w-full overflow-hidden"
+                        style={{ height: '140px', background: hasData ? '#FDF6F0' : '#F3F4F6' }}
+                      >
+                        <img
+                          src={sector.image}
+                          alt={sector.name}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          style={{ filter: hasData ? 'none' : 'grayscale(100%) brightness(0.9)' }}
+                          onError={(e) => {
+                            const img = e.target as HTMLImageElement;
+                            img.style.display = 'none';
+                            const parent = img.parentElement;
+                            if (parent) parent.style.background = hasData ? sector.fallbackBg : '#E5E7EB';
+                          }}
+                        />
+                        <div
+                          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          style={{ background: 'linear-gradient(to top, rgba(194,65,12,0.25), transparent)' }}
+                        />
+                        {/* Count badge */}
+                        {hasData && (
+                          <span
+                            className="absolute top-2 right-2 text-xs font-bold px-2 py-0.5 rounded-full text-white shadow-md"
+                            style={{ background: sector.gradient }}
+                          >
+                            {count}
+                          </span>
+                        )}
+                      </div>
+                      {/* Name bar */}
+                      <div
+                        className="px-3 py-2.5 transition-colors group-hover:bg-orange-50"
+                        style={{ background: 'white' }}
+                      >
+                        <span
+                          className="text-xs font-bold truncate block"
+                          style={{ color: hasData ? '#1C1917' : '#9CA3AF' }}
+                        >
+                          {sector.name}
+                        </span>
+                        {hasData && (
+                          <span className="text-xs" style={{ color: '#C2410C' }}>Explore →</span>
+                        )}
+                      </div>
+                    </div>
+                  </Link>
                 </motion.div>
-              )}
-            />
-          ) : (
-            // ✅ Empty state — only when truly no categories exist
-            <div className="text-center py-16 rounded-2xl border"
-              style={{ background: '#F5F5FF', borderColor: 'rgba(67,56,202,0.10)' }}>
-              <FolderOpen className="w-12 h-12 mx-auto mb-4" style={{ color: '#C7D2FE' }} />
-              <p style={{ color: '#6B7280' }}>No categories yet. Add them from the admin panel.</p>
-            </div>
-          )}
+              );
+            }}
+          />
         </div>
       </section>
 
@@ -644,7 +738,6 @@ export default function HomePage() {
           style={{ background: 'linear-gradient(90deg, transparent, rgba(67,56,202,0.20), transparent)' }} />
         <div className="absolute bottom-0 left-0 right-0 h-px"
           style={{ background: 'linear-gradient(90deg, transparent, rgba(245,158,11,0.20), transparent)' }} />
-
         <div
           className="absolute top-6 left-8 text-[220px] font-black leading-none select-none pointer-events-none"
           style={{ color: 'rgba(67,56,202,0.04)', fontFamily: 'Georgia, serif' }}
@@ -661,11 +754,7 @@ export default function HomePage() {
           >
             <div
               className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold mb-5"
-              style={{
-                background: 'rgba(67,56,202,0.08)',
-                border: '1px solid rgba(67,56,202,0.18)',
-                color: '#3730A3',
-              }}
+              style={{ background: 'rgba(67,56,202,0.08)', border: '1px solid rgba(67,56,202,0.18)', color: '#3730A3' }}
             >
               <Quote className="w-4 h-4" />
               Words of Empowerment
@@ -702,21 +791,18 @@ export default function HomePage() {
                   className="absolute bottom-4 right-7 text-7xl font-black select-none leading-none rotate-180"
                   style={{ color: quotes[activeQuote].accent, opacity: 0.12, fontFamily: 'Georgia, serif' }}
                 >"</div>
-
                 <div
                   className="inline-flex w-12 h-12 rounded-2xl items-center justify-center mx-auto mb-7 shadow-md"
                   style={{ background: quotes[activeQuote].accentLight }}
                 >
                   <Quote className="w-6 h-6" style={{ color: quotes[activeQuote].accent }} />
                 </div>
-
                 <p
                   className="text-lg sm:text-xl leading-relaxed font-medium mb-10 italic relative z-10"
                   style={{ fontFamily: "'Playfair Display', Georgia, serif", color: '#1E1B4B' }}
                 >
                   "{quotes[activeQuote].text}"
                 </p>
-
                 <div className="flex items-center justify-center gap-3">
                   <motion.div
                     animate={{ scale: [1, 1.08, 1] }}
