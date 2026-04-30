@@ -16,13 +16,14 @@ export interface District {
 
 export interface Beneficiary {
   id: string;
-  name?: string;               // ✅ ADDED: personal/owner name
+  name?: string;
   business_name: string;
   about: string;
   services: string[];
   mobile_number: string;
   location: string;
   district?: string;
+  sector?: string;             // ✅ ADDED: sector/category
   whatsapp?: string;
   working_hours?: string;
   order_types?: string;

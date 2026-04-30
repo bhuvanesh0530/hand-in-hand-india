@@ -1,44 +1,63 @@
-import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
-import type { Category } from '../types';
-import { CategoryCard } from '../components/category/CategoryCard';
 import { motion } from 'framer-motion';
-import { MapPin, FolderOpen } from 'lucide-react';
+import { MapPin, ChevronRight, Folder } from 'lucide-react';
+import { useApp } from '../context/AppContext';
+
+const SECTORS = [
+  {
+    id: 'agriculture',
+    name: 'Agriculture & Allied Activities',
+    description: 'Farming, horticulture, and allied agricultural businesses run by women SHGs.',
+    image: '/illustrations/sectors/agri.png',
+    gradient: { from: 'from-[#C2410C]', to: 'to-[#D97706]' },
+  },
+  {
+    id: 'animal-husbandry',
+    name: 'Animal Husbandry',
+    description: 'Dairy, poultry, and livestock-based livelihoods by women entrepreneurs.',
+    image: '/illustrations/sectors/animal-husbandry.png',
+    gradient: { from: 'from-[#0F766E]', to: 'to-[#0d9488]' },
+  },
+  {
+    id: 'handloom',
+    name: 'Handloom & Handicrafts',
+    description: 'Weaving, crafts, and traditional handmade products by skilled artisans.',
+    image: '/illustrations/sectors/handloom.png',
+    gradient: { from: 'from-[#D97706]', to: 'to-[#f59e0b]' },
+  },
+  {
+    id: 'manufacturing',
+    name: 'Manufacturing / Production',
+    description: 'Small-scale production and manufacturing units led by women.',
+    image: '/illustrations/sectors/manufacturing.png',
+    gradient: { from: 'from-[#C2410C]', to: 'to-[#0F766E]' },
+  },
+  {
+    id: 'service',
+    name: 'Service',
+    description: 'Tailoring, beauty, catering, and other service-based businesses.',
+    image: '/illustrations/sectors/service.png',
+    gradient: { from: 'from-[#0F766E]', to: 'to-[#D97706]' },
+  },
+  {
+    id: 'trade',
+    name: 'Trade',
+    description: 'Retail, wholesale, and commerce businesses run by women SHG members.',
+    image: '/illustrations/sectors/trade.png',
+    gradient: { from: 'from-[#D97706]', to: 'to-[#C2410C]' },
+  },
+];
 
 export default function CategoriesPage() {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { beneficiaries } = useApp();
 
-  useEffect(() => {
-    async function fetchCategories() {
-      try {
-        const { data, error } = await supabase.from('categories').select('*').order('name');
-        if (error) throw error;
-        setCategories(data || []);
-      } catch (err) {
-        setError('Failed to load categories');
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchCategories();
-  }, []);
-
-  if (loading) return (
-    <div className="min-h-screen flex items-center justify-center">
-      <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-        className="rounded-full h-12 w-12 border-b-2 border-[#C2410C]" />
-    </div>
-  );
-
-  if (error) return (
-    <div className="min-h-screen flex items-center justify-center text-red-500">{error}</div>
-  );
+  // Count beneficiaries per sector
+  const countBySector = (sectorName: string) =>
+    beneficiaries.filter(b => b.sector === sectorName).length;
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-10">
+
       {/* Breadcrumb */}
       <nav className="text-sm text-stone-400 mb-6">
         <Link to="/" className="hover:text-[#C2410C] transition">Home</Link>
@@ -56,7 +75,7 @@ export default function CategoriesPage() {
           >
             All Categories
           </motion.h1>
-          <p className="text-stone-500">Browse beneficiaries by category</p>
+          <p className="text-stone-500">Browse beneficiaries by sector</p>
         </div>
         <Link to="/districts">
           <motion.div
@@ -69,27 +88,72 @@ export default function CategoriesPage() {
         </Link>
       </div>
 
-      {categories.length === 0 ? (
-        <div className="text-center py-20">
-          <FolderOpen className="w-12 h-12 text-stone-300 mx-auto mb-4" />
-          <p className="text-stone-400">No categories found.</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {categories.map((category, index) => (
+      {/* Sector Cards Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {SECTORS.map((sector, index) => {
+          const count = countBySector(sector.name);
+          return (
             <motion.div
-              key={category.id}
+              key={sector.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.07, ease: [0.22, 1, 0.36, 1] }}
             >
-              <Link to={`/categories/${category.id}`}>
-                <CategoryCard category={category} />
+              <Link to={`/businesses?sector=${encodeURIComponent(sector.name)}`}>
+                <motion.div
+                  whileHover={{ y: -8, scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                  className="group relative bg-white/75 backdrop-blur-xl border border-white/60 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300"
+                >
+                  {/* Top gradient bar */}
+                  <div className={`h-1.5 bg-gradient-to-r ${sector.gradient.from} ${sector.gradient.to}`} />
+
+                  {/* Illustration */}
+                  <div className="relative w-full h-44 bg-[#FDF6F0] overflow-hidden">
+                    <img
+                      src={sector.image}
+                      alt={sector.name}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      onError={e => {
+                        (e.target as HTMLImageElement).style.display = 'none';
+                      }}
+                    />
+                    <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-white/60 to-transparent" />
+                  </div>
+
+                  {/* Card body */}
+                  <div className="p-5">
+                    <h3 className="text-lg font-bold text-stone-900 group-hover:text-[#C2410C] transition-colors leading-tight mb-1">
+                      {sector.name}
+                    </h3>
+                    <p className="text-sm text-stone-500 line-clamp-2 mb-3">
+                      {sector.description}
+                    </p>
+
+                    {/* Count */}
+                    {count > 0 && (
+                      <div className="flex items-center gap-1.5 text-stone-400 mb-3">
+                        <Folder className="w-3.5 h-3.5" />
+                        <span className="text-xs font-medium">{count} businesses</span>
+                      </div>
+                    )}
+
+                    {/* Explore link */}
+                    <div className="flex items-center gap-1 text-[#C2410C] font-semibold text-sm group-hover:gap-2 transition-all">
+                      <span>Explore</span>
+                      <ChevronRight className="w-4 h-4" />
+                    </div>
+                  </div>
+
+                  {/* Hover overlay */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${sector.gradient.from} ${sector.gradient.to} opacity-0 group-hover:opacity-5 transition-opacity duration-300 pointer-events-none`} />
+                </motion.div>
               </Link>
             </motion.div>
-          ))}
-        </div>
-      )}
+          );
+        })}
+      </div>
     </div>
   );
 }
