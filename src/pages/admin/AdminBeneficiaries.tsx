@@ -5,7 +5,6 @@ import type { Category } from '../../types';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Upload, X, Edit2, Trash2, Eye, ChevronDown, ChevronUp } from 'lucide-react';
 
-// ✅ FIXED: Exact 38 official Tamil Nadu districts — matches DistrictPage.tsx exactly
 const TN_DISTRICTS = [
   'Ariyalur','Chengalpattu','Chennai','Coimbatore','Cuddalore',
   'Dharmapuri','Dindigul','Erode','Kallakurichi','Kanchipuram',
@@ -15,6 +14,15 @@ const TN_DISTRICTS = [
   'Thanjavur','Theni','Thoothukudi','Tiruchirappalli','Tirunelveli',
   'Tirupathur','Tiruppur','Tiruvallur','Tiruvannamalai','Tiruvarur',
   'Vellore','Viluppuram','Virudhunagar'
+];
+
+const SECTORS = [
+  'Agriculture & Allied Activities',
+  'Animal Husbandry',
+  'Handloom & Handicrafts',
+  'Manufacturing / Production',
+  'Service',
+  'Trade',
 ];
 
 interface BeneficiaryRow {
@@ -36,6 +44,7 @@ interface BeneficiaryRow {
   working_hours?: string | null;
   featured?: boolean | null;
   category_id?: string | null;
+  sector?: string | null;
   categories?: { name: string };
 }
 
@@ -57,6 +66,7 @@ const EMPTY_FORM: Omit<BeneficiaryRow, 'id' | 'categories'> = {
   working_hours: '',
   featured: false,
   category_id: '',
+  sector: '',
 };
 
 export default function AdminBeneficiaries() {
@@ -169,6 +179,7 @@ export default function AdminBeneficiaries() {
       working_hours: form.working_hours?.trim() || null,
       featured: form.featured || false,
       category_id: form.category_id || null,
+      sector: form.sector?.trim() || null,
     };
 
     let err;
@@ -209,6 +220,7 @@ export default function AdminBeneficiaries() {
       working_hours: ben.working_hours || '',
       featured: ben.featured || false,
       category_id: ben.category_id || '',
+      sector: ben.sector || '',
     });
     setEditingId(ben.id);
     setShowForm(true);
@@ -277,7 +289,7 @@ export default function AdminBeneficiaries() {
               {/* Beneficiary Full Name */}
               <div className="sm:col-span-2">
                 <label className={label}>Beneficiary Full Name</label>
-                <input className={inp} placeholder="e.g. Prema Selvamumar"
+                <input className={inp} placeholder="e.g. Prema Selvakumar"
                   value={form.name || ''} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
               </div>
 
@@ -288,7 +300,7 @@ export default function AdminBeneficiaries() {
                   value={form.business_name || ''} onChange={e => setForm(f => ({ ...f, business_name: e.target.value }))} />
               </div>
 
-              {/* ✅ FIXED: District dropdown — matches DistrictPage exactly */}
+              {/* District dropdown */}
               <div>
                 <label className={label}>District</label>
                 <select className={inp} value={form.district || ''}
@@ -298,22 +310,14 @@ export default function AdminBeneficiaries() {
                 </select>
               </div>
 
-              {/* ✅ FIXED: Category dropdown — from Supabase, no manual typing */}
+              {/* ── SECTOR dropdown (hardcoded) ── */}
               <div>
                 <label className={label}>Category / Sector</label>
-                <select className={inp} value={form.category_id || ''}
-                  onChange={e => setForm(f => ({ ...f, category_id: e.target.value }))}>
-                  <option value="">Select category</option>
-                  {categories.map(c => (
-                    <option key={c.id} value={c.id}>{c.name}</option>
-                  ))}
+                <select className={inp} value={form.sector || ''}
+                  onChange={e => setForm(f => ({ ...f, sector: e.target.value }))}>
+                  <option value="">Select sector</option>
+                  {SECTORS.map(s => <option key={s} value={s}>{s}</option>)}
                 </select>
-                {categories.length === 0 && (
-                  <p className="text-xs text-amber-500 mt-1">
-                    ⚠️ No categories found. Add them in{' '}
-                    <a href="/admin/categories" className="underline">Manage Categories</a> first.
-                  </p>
-                )}
               </div>
 
               {/* Shop Address */}
@@ -526,7 +530,7 @@ export default function AdminBeneficiaries() {
                   <p className="text-xs text-gray-600 font-medium mt-0.5">{ben.name}</p>
                 )}
                 <p className="text-xs text-gray-400 mt-0.5">
-                  {ben.categories?.name && <span className="mr-2">{ben.categories.name}</span>}
+                  {ben.sector && <span className="mr-2">{ben.sector}</span>}
                   {ben.district && <span className="mr-2">· {ben.district}</span>}
                   {ben.mobile_number && <span>· {ben.mobile_number}</span>}
                 </p>
